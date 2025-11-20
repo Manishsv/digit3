@@ -6,8 +6,8 @@ This guide provides detailed steps for developers to create a new microservice o
 
 * Set up your development environment
 * Develop the registries, services, and APIs for a voter registration module that were described in the [Design Guide](https://docs.digit.org/platform/guides/design-guide)
-* Integrate with an existing DIGIT environment and re-use a lot of the common services using Kubernetes port forwarding
-* Test the new module and debug
+* Integrate with an existing DIGIT environment and re-use a lot of the common services using [DIGIT Client Library](https://github.com/digitnxt/digit3/tree/client-library-java-7/code/digit-client/src/main/java/com/digit/services)
+* Test the new module
 * Build the new service in the DIGIT environment
 
 The guide is divided into multiple sections for ease of use. Click on the section cards below to follow the development steps.
