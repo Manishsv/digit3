@@ -4,7 +4,7 @@ This project is currently in active development. The documentation outlines the 
 
 ## DIGIT 3.0
 
-DIGIT 3.0 is an open source, citizen-centric platform designed to transform how governments deliver public services. Built on the principles of digital public infrastructure, it provides governments with a flexible, modular toolkit to create inclusive, accessible, and efficient service delivery systems. DIGIT 3.0 focuses on the complete citizen journey—from service discovery to fulfillment—while giving governments the tools to streamline operations, integrate disparate systems, and make data-driven decisions. As a global public good, DIGIT 3.0 empowers governments of all sizes to build sovereign digital capabilities without vendor lock-in or proprietary constraints.
+DIGIT 3.0 is an open source, citizen-centric platform designed to transform how governments deliver public services. It provides governments with a flexible, modular toolkit to create inclusive, accessible, and efficient service delivery systems. DIGIT 3.0 empowers governments of all sizes to build  digital capabilities without vendor lock-in or proprietary constraints.
 
 
 ### What is Public Service Delivery?
@@ -62,7 +62,7 @@ Its suite of backend services and frontend applications are modular, configurabl
 
 ### DIGIT in Action
 
-DIGIT 3.0 supports the complete citizen service journey—from discovery to fulfillment—through a shared digital infrastructure that multiple government agencies can leverage. By enabling multi-tenancy, DIGIT allows different departments and levels of government to transform their service delivery while sharing common services, data registries, and infrastructure costs.
+DIGIT 3.0 supports the complete citizen service journey through a shared digital infrastructure that multiple government agencies can leverage. By enabling multi-tenancy, DIGIT allows different departments and levels of government to transform their service delivery while sharing common services, data registries, and infrastructure costs.
 
 #### Service Delivery Architecture
 
