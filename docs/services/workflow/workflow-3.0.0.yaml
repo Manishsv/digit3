@@ -1,29 +1,29 @@
 openapi: 3.0.3
 info:
-  title: Workflow service APIs definations
+  title: Workflow service API definitions
   version: 3.0.0
-  description: API for creating, updating, and searching Individuals
+  description: API for creating, updating, searching, and transitioning workflow processes
 
 servers:
   - url: /workflow/v3
-  
+
 security:
   - BearerAuth: []
 
 tags:
-  - name: "Process"
-    description: "Operations related to workflow processes"
-  - name: "State"
-    description: "Operations for managing states within a process"
-  - name: "Action"
-    description: "Operations for managing transitions between states"
+  - name: Process
+    description: Operations related to workflow processes
+  - name: State
+    description: Operations for managing states within a process
+  - name: Action
+    description: Operations for managing actions within states
+
 paths:
-  
-  /process:
+
+  /processes:
     post:
       summary: Create a new process
-      tags:
-        - Process
+      tags: [Process]
       requestBody:
         required: true
         content:
@@ -31,51 +31,28 @@ paths:
             schema:
               $ref: '#/components/schemas/Process'
       responses:
-        '202':
-          description: Accepted
+        '201':
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Process'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-
     get:
-      summary: Get list of process for given criteria 
-      tags:
-        - Process
+      summary: List processes
+      tags: [Process]
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: code
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: Success
@@ -85,65 +62,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Process'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
 
-        '400':
-          description: Bad Request
+  /processes/{id}:
+    get:
+      summary: Get a specific process
+      tags: [Process]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - in: query
-          name: id
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-        - in: query
-          name: name
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-        
-    
-  /process/{id}:
+                $ref: '#/components/schemas/Process'
     put:
-      summary: Update existing Process
-      tags:
-        - Process
+      summary: Update an existing process
+      tags: [Process]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -151,162 +96,42 @@ paths:
             schema:
               $ref: '#/components/schemas/Process'
       responses:
-        '202':
-          description: Accepted
+        '200':
+          description: Updated successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Process'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - name: id
-          in: path
-          required: true
-          description: Unique identifier of the process
-          schema:
-            type: string
-
-    get:
-      summary: Get list of process for process id 
-      tags:
-        - Process
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/Process'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
-
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - name: id
-          in: path
-          required: true
-          description: Unique identifier of the process
-          schema:
-            type: string
- 
     delete:
-      summary: Get list of process for given criteria 
-      tags:
-        - Process
+      summary: Delete a process
+      tags: [Process]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       responses:
         '204':
           description: Process deleted successfully
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
 
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - name: id
-          in: path
-          required: true
-          description: Unique identifier of the process
-          schema:
-            type: string  
-
-  /process/defination:
+  /process-definitions:
     get:
-      summary: Get list of process for given criteria 
-      tags:
-        - Process
+      summary: List process definitions
+      tags: [Process]
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: name
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: Success
@@ -316,65 +141,35 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProcessDefinationDetail'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
 
-        '400':
-          description: Bad Request
+  /transition:
+    post:
+      summary: Transition a process instance to the next state
+      tags: [Process]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessInstance'
+      responses:
+        '200':
+          description: Transition successful
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ProcessInstance'
 
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - in: query
-          name: id
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-        - in: query
-          name: name
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-    
-
-  /process/{processId}/state:
+  /states:
     post:
-      summary: Create a new State
-      tags:
-        - State
+      summary: Create a new state
+      tags: [State]
       requestBody:
         required: true
         content:
@@ -382,51 +177,20 @@ paths:
             schema:
               $ref: '#/components/schemas/State'
       responses:
-        '202':
-          description: Accepted
+        '201':
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/State'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-
     get:
-      summary: Search States
-      tags:
-        - State
+      summary: List states
+      tags: [State]
+      parameters:
+        - in: query
+          name: processId
+          schema:
+            type: string
       responses:
         '200':
           description: Success
@@ -436,35 +200,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/State'
-          headers:  # same as above
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
+
+  /states/{id}:
+    get:
+      summary: Get a specific state
+      tags: [State]
       parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
         - in: path
-          name: processId
+          name: id
           required: true
           schema:
             type: string
-
-  /state/{id}:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
     put:
-      summary: Update existing State
-      tags:
-        - State
+      summary: Update a state
+      tags: [State]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -472,137 +234,35 @@ paths:
             schema:
               $ref: '#/components/schemas/State'
       responses:
-        '202':
-          description: Accepted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/State'
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-
-    get:
-      summary: Search States
-      tags:
-        - State
-      responses:
         '200':
-          description: Success
+          description: Updated successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/State'
-          headers:  # same as above
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a state
+      tags: [State]
       parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
         - in: path
           name: id
           required: true
           schema:
             type: string
-
-    delete:
-      summary: Delete existing state
-      tags:
-        - State
       responses:
         '204':
-          description: state deleted successfully
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
+          description: State deleted successfully
 
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - name: id
-          in: path
-          required: true
-          description: Unique identifier of the state
-          schema:
-            type: string  
-  
-  /state/{stateid}/action:
+  /states/{stateId}/actions:
     post:
-      summary: Create a new Action
-      tags:
-        - Action
+      summary: Create an action for a state
+      tags: [Action]
+      parameters:
+        - in: path
+          name: stateId
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -610,35 +270,21 @@ paths:
             schema:
               $ref: '#/components/schemas/Action'
       responses:
-        '202':
-          description: Accepted
+        '201':
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Action'
-          headers:  # same as above
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-
     get:
-      summary: Search Actions
-      tags:
-        - Action
+      summary: List actions for a state
+      tags: [Action]
+      parameters:
+        - in: path
+          name: stateId
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Success
@@ -648,47 +294,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Action'
-          headers:  # same as above
-        '400':
-          description: Bad Request
+
+  /actions/{id}:
+    get:
+      summary: Get a specific action
+      tags: [Action]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters:  # same
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - in: query
-          name: id
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-        - in: query
-          name: currentState
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: nextState
-          required: false
-          schema:
-            type: string    
-  /action/{id}:
+                $ref: '#/components/schemas/Action'
     put:
-      summary: Update existing Action
-      tags:
-        - Action
+      summary: Update an action
+      tags: [Action]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -696,130 +328,25 @@ paths:
             schema:
               $ref: '#/components/schemas/Action'
       responses:
-        '202':
-          description: Accepted
+        '200':
+          description: Updated successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Action'
-          headers:  # same as above
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-
-    get:
-      summary: Search Actions
-      tags:
-        - Action
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Action'
-          headers:  # same as above
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-      parameters:  # same
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - in: query
-          name: id
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-        - in: query
-          name: currentState
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: nextState
-          required: false
-          schema:
-            type: string
-
     delete:
-      summary: Delete existing action
-      tags:
-        - Action
+      summary: Delete an action
+      tags: [Action]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       responses:
         '204':
           description: Action deleted successfully
-          headers:
-            X-Response-Time:
-              $ref: '#/components/headers/X-Response-Time'
-            X-Response-Timestamp:
-              $ref: '#/components/headers/X-Response-Timestamp'
-            X-Request-ID:
-              $ref: '#/components/headers/X-Request-ID'
-            X-Correlation-ID:
-              $ref: '#/components/headers/X-Correlation-ID'
-            X-Tenant-ID:
-              $ref: '#/components/headers/X-Tenant-ID'
-            X-Rate-Limit:
-              $ref: '#/components/headers/X-Rate-Limit'
-            X-Rate-Limit-Remaining:
-              $ref: '#/components/headers/X-Rate-Limit-Remaining'
-            X-Rate-Limit-Reset:
-              $ref: '#/components/headers/X-Rate-Limit-Reset'
 
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Error'
-
-      parameters: 
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - name: id
-          in: path
-          required: true
-          description: Unique identifier of the action
-          schema:
-            type: string  
 
     
 components:
@@ -987,8 +514,11 @@ components:
           description: List of roles (actors) allowed to perform this action
           items:
             type: string
+        attributeValidation:
+          $ref: '#/components/schemas/AttributeValidation'
         auditDetail:
           $ref: '#/components/schemas/AuditDetail'
+
     
     StateDetail:
       allOf:
@@ -1063,11 +593,42 @@ components:
           type: integer
           description: Date from when license is valid as epoch.
           format: int64  
+        attributes:
+          type: object
+          description: Runtime user attributes to evaluate against guard attributes. Keys represent attribute names; values are lists of values or single values.
+          additionalProperties:
+            type: array
+            items:
+              type: string
+            example:
+               "attributes": {
+                "role": ["EMPLOYEE"],
+                "jurisdiction": ["Koramangala"],
+                "department": ["Health"]
+              }
         auditDetails:
           $ref: '#/components/schemas/AuditDetail'
 
-            
-        
-
-
-    
+    AttributeValidation:
+      type: object
+      required:
+        - actionId
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the guard
+          readOnly: true
+        attributes:
+          type: object
+          description: Attributes object that defines dynamic, flexible conditions to control who can perform the action. Each key represents an attribute category (e.g., jurisdiction, department, user group), and the corresponding value is a list of allowed values for that category.
+          example:
+             "attributes": {"role": ["CITIZEN"] }
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        assigneeCheck:
+          type: boolean
+          description: Whether to enforce that only the assigned user can perform this action
+        auditDetail:
+          $ref: '#/components/schemas/AuditDetail'
