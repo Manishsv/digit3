@@ -1142,10 +1142,10 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
 
-  /bills/generate:
+  /bill/generate:
     post:
-      summary: Generate bills
-      operationId: generateBills
+      summary: Generate bill
+      operationId: generateBill
       tags: [Bill]
       parameters:
         - $ref: '#/components/parameters/RequestIdHeader'
@@ -1162,10 +1162,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              minItems: 1
-              items:
-                $ref: '#/components/schemas/GenerateBillCriteria'
+              $ref: '#/components/schemas/GenerateBillCriteria'
       responses:
         '201':
           description: Bills generated
@@ -1178,8 +1175,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items: { $ref: '#/components/schemas/Bill' }
+                $ref: '#/components/schemas/Bill'
         '400':
           description: Validation error (unknown head, invalid amounts, bad status transition, etc.)
           content:
@@ -1198,10 +1194,10 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
       
-  /bills/cancel:
+  /bill/cancel:
     post:
-      summary: Cancel bills
-      operationId: cancelBills
+      summary: Cancel bill
+      operationId: cancelBill
       tags: [Bill]
       parameters:
         - $ref: '#/components/parameters/RequestIdHeader'
@@ -1218,10 +1214,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              minItems: 1
-              items:
-                $ref: '#/components/schemas/UpdateBillStatus'
+              $ref: '#/components/schemas/UpdateBillStatus'
       responses:
         '201':
           description: Bills canceled
@@ -1234,8 +1227,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items: { $ref: '#/components/schemas/Bill' }
+                $ref: '#/components/schemas/Bill'
         '400':
           description: Validation error (unknown head, invalid amounts, bad status transition, etc.)
           content:
@@ -1321,6 +1313,7 @@ components:
         - isActive
         - currency
         - effectiveFrom
+        - billExpiryDays
       properties:
         id:
           type: string
@@ -1353,8 +1346,7 @@ components:
             enum: [UPI, CARD, NETBANKING, CASH, CHEQUE, DD, WALLET]
         billExpiryDays:
           type: integer
-          minimum: 0
-          description: Days after which an issued bill expires (0 = never)
+          description: Days after which an issued bill expires (-1 = never)
           example: 30
         partialPaymentAllowed:
           type: boolean
@@ -2136,6 +2128,7 @@ components:
       description: Criteria for generating one or more bills from eligible FROZEN?ACTIVE demands under a BusinessService.
       required:
         - businessServiceCode
+        - consumerCode
       properties:
         businessServiceCode:
           type: string
