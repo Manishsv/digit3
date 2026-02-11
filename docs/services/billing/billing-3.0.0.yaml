@@ -1515,7 +1515,7 @@ components:
           description: Enabled payment modes for this service
           items:
             type: string
-            enum: [UPI, CARD, NETBANKING, CASH, CHEQUE, DD, WALLET]
+            enum: [CASH, CHEQUE, DD, POSTAL_ORDER, OFFLINE_NEFT, OFFLINE_RTGS, ONLINE, CARD,ONLINE_NEFT, ONLINE_RTGS, UPI, NETBANKING, WALLET]
         billExpiryDays:
           type: integer
           description: Days after which an issued bill expires (-1 = never)
@@ -1594,11 +1594,11 @@ components:
           description: Enabled payment modes for this service
           items:
             type: string
-            enum: [UPI, CARD, NETBANKING, CASH, CHEQUE, DD, WALLET]
+            enum: [CASH, CHEQUE, DD, POSTAL_ORDER, OFFLINE_NEFT, OFFLINE_RTGS, ONLINE, CARD,ONLINE_NEFT, ONLINE_RTGS, UPI, NETBANKING, WALLET]
         billExpiryDays:
           type: integer
-          minimum: 0
-          description: Days after which an issued bill expires (0 = never)
+          minimum: -1
+          description: Days after which an issued bill expires (-1 = never)
           example: 30
         partialPaymentAllowed:
           type: boolean
@@ -1657,7 +1657,7 @@ components:
           description: Enabled payment modes for this service
           items:
             type: string
-            enum: [UPI, CARD, NETBANKING, CASH, CHEQUE, DD, WALLET]
+            enum: [CASH, CHEQUE, DD, POSTAL_ORDER, OFFLINE_NEFT, OFFLINE_RTGS, ONLINE, CARD,ONLINE_NEFT, ONLINE_RTGS, UPI, NETBANKING, WALLET]
         billExpiryDays:
           type: integer
           minimum: 0
@@ -1711,7 +1711,7 @@ components:
           type: array
           items:
             type: string
-            enum: [UPI, CARD, NETBANKING, CASH, CHEQUE, DD, WALLET]
+            enum: [CASH, CHEQUE, DD, POSTAL_ORDER, OFFLINE_NEFT, OFFLINE_RTGS, ONLINE, CARD,ONLINE_NEFT, ONLINE_RTGS, UPI, NETBANKING, WALLET]
         billExpiryDays:
           type: integer
           minimum: 0
@@ -2001,7 +2001,7 @@ components:
           example:
             - "IND-8a2c4a74-11e5-4c3e-9d9f-f7f4c0b1b9a3"
             - "IND-51b7d3c1-5e2e-4f1a-92f3-2b3f9b0caa11"
-        arrearSourceDemandIds:
+        arrearDemandIds:
           type: array
           description: Stores references to all previous aggregated demand IDs (ordered newest → oldest).
           items:
@@ -2075,6 +2075,16 @@ components:
         - taxHeadCode
         - amount
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique ID for internal reference (UUID)
+        demandId:
+          type: string
+          format: uuid
+          readOnly: true
+          description: References Demand
         taxHeadCode:
           type: string
           minLength: 2
@@ -2472,6 +2482,16 @@ components:
       type: object
       description: Defines the period-based billing section associated with a demand, containing aggregated amount values and detailed account-level tax entries.
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique ID for internal reference (UUID)
+        billId:
+          type: string
+          format: uuid
+          readOnly: true
+          description: References Bill
         demandId:
           type: string
           format: uuid
@@ -2510,6 +2530,30 @@ components:
       type: object
       description: Defines the granular accounting component of a bill, specifying tax head mapping, payable and adjusted amounts, and metadata for audit traceability.
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique ID for internal reference (UUID)
+        billDetailId:
+          type: string
+          format: uuid
+          readOnly: true
+          description: References Bill Detail
+        lineItemId:
+          type: string
+          format: uuid
+          readOnly: true
+          description: References Line Item
+        taxHeadCode:
+          type: string
+          minLength: 2
+          maxLength: 64
+          pattern: '^[A-Z][A-Z0-9_]{1,63}$'
+          description: |
+            Code of the configured Tax Head (same Business Service; active within the period).
+            Pattern: uppercase letters, digits, underscore; must start with a letter.
+          example: PT_BASE
         order: 
           type: integer
           minimum: 1
@@ -2521,15 +2565,6 @@ components:
           type: number
           format: double
           example: 0
-        taxHeadCode:
-          type: string
-          minLength: 2
-          maxLength: 64
-          pattern: '^[A-Z][A-Z0-9_]{1,63}$'
-          description: |
-            Code of the configured Tax Head (same Business Service; active within the period).
-            Pattern: uppercase letters, digits, underscore; must start with a letter.
-          example: PT_BASE
         metadata:
           type: object
           additionalProperties: true
@@ -2564,7 +2599,10 @@ components:
           format: int64
         paymentMode:
           type: string
-          enum: [CASH, CHEQUE, DD, ONLINE, CARD]
+          enum: [CASH, CHEQUE, DD, POSTAL_ORDER, OFFLINE_NEFT, OFFLINE_RTGS, ONLINE, CARD,ONLINE_NEFT, ONLINE_RTGS, UPI, NETBANKING, WALLET]
+        paymentStatus:
+          type: string
+          enum: [NEW, DEPOSITED, CANCELLED, DISHONOURED, RECONCILED]
         instrumentDate:
           type: integer
           format: int64
@@ -2573,7 +2611,7 @@ components:
           maxLength: 128
         instrumentStatus:
           type: string
-          enum: [APPROVED, CANCELLED, DISHONOURED, REMITTED, REJECTED]
+          enum: [APPROVED, APPROVAL_PENDING, TO_BE_SUBMITTED, CANCELLED, DISHONOURED, REMITTED, REJECTED]
         ifscCode:
           type: string
           maxLength: 64
@@ -2605,9 +2643,6 @@ components:
           format: email
           maxLength: 254
           description: Valid email address (e.g., user@example.com)
-        paymentStatus:
-          type: string
-          enum: [NEW, DEPOSITED, CANCELLED, DISHONOURED, RECONCILED]
         paymentDetails:
           type: array
           items:
@@ -2629,6 +2664,16 @@ components:
         - businessServiceCode
         - billId
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique ID for internal reference (UUID)
+        paymentId:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Reference Payment
         totalAmountDue:
           type: number
           format: double
