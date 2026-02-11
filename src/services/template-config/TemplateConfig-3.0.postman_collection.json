@@ -1,0 +1,205 @@
+{
+	"info": {
+		"_postman_id": "c5a8dea1-da5c-4f34-b9fd-1a483ce5a0ac",
+		"name": "TemplateConfig-3.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32125612"
+	},
+	"item": [
+		{
+			"name": "Create template config",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					},
+					{
+						"key": "X-Client-ID",
+						"value": "aded5337-abf6-4ddb-b0f4-313269975234",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"templateId\": \"user-details\",\n  \"fieldMapping\": {\n    \"name\": \"$.user.name\",\n    \"age\": \"$.user.age\"\n  },\n  \"apiMapping\": [\n    {\n      \"method\": \"GET\",\n      \"endpoint\": {\n        \"base\": \"https://jsonplaceholder.typicode.com\",\n        \"path\": \"/{{resources}}/{{id}}\",\n        \"pathParams\": {\n          \"resources\": \"$.resources\",\n          \"id\": \"$.id\"\n        }\n      },\n      \"responseMapping\": {\n        \"userId\":\"$.userId\",\n        \"title\": \"$.title\"\n      }\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/template-config/v1/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"template-config",
+						"v1",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update template config",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					},
+					{
+						"key": "X-Client-ID",
+						"value": "e20089e3-751c-45df-a486-fff3c175898a",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"templateId\": \"user-details\",\n    \"fieldMapping\": {\n        \"age\": \"$.user.age\",\n        \"name\": \"$.user.name\",\n        \"emailId\": \"$.user.emailId\"\n    },\n    \"apiMapping\": [\n        {\n            \"method\": \"GET\",\n            \"endpoint\": {\n                \"base\": \"https://jsonplaceholder.typicode.com\",\n                \"path\": \"/{{resources}}/{{id}}\",\n                \"pathParams\": {\n                    \"id\": \"$.id\",\n                    \"resources\": \"$.resources\"\n                },\n                \"queryParams\": null\n            },\n            \"responseMapping\": {\n                \"title\": \"$.title\",\n                \"userId\": \"$.userId\"\n            }\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/template-config/v1/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"template-config",
+						"v1",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search template config",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8092/template-config/v1/config?ids=a9ac2fe8-2f50-45b7-9415-5cf837225912,e20089e3-751c-45df-a486-fff3c175898a,aded5337-abf6-4ddb-b0f4-313269975234&version=v2&templateId=user-details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"template-config",
+						"v1",
+						"config"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "a9ac2fe8-2f50-45b7-9415-5cf837225912,e20089e3-751c-45df-a486-fff3c175898a,aded5337-abf6-4ddb-b0f4-313269975234"
+						},
+						{
+							"key": "version",
+							"value": "v2"
+						},
+						{
+							"key": "templateId",
+							"value": "user-details"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete template config",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8092/template-config/v1/config?templateId=user-details&version=v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"template-config",
+						"v1",
+						"config"
+					],
+					"query": [
+						{
+							"key": "templateId",
+							"value": "user-details"
+						},
+						{
+							"key": "version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Render template config",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"templateId\": \"user-details\",\n    \"version\": \"v1\",\n    \"payload\": {\n        \"user\": {\n            \"name\": \"John\",\n            \"age\": 30,\n            \"emailId\": \"example@gmail.com\"\n        },\n        \"resources\": \"albums\",\n        \"id\": 5\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/template-config/v1/render",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"template-config",
+						"v1",
+						"render"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

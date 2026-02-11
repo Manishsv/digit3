@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "ebc72418-3b9b-4c6f-b1be-33ea87ccf233",
+		"name": "UrlShortener",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32125612"
+	},
+	"item": [
+		{
+			"name": "shorten",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://www.flipkart.com/\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8098/url-shortener/v1/shortener",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"url-shortener",
+						"v1",
+						"shortener"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "redirect",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8098/url-shortener/8JLr",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8098",
+					"path": [
+						"url-shortener",
+						"8JLr"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "37f99e12-6e36-4fbd-acf2-6cbab237c497",
+		"name": "filestore-3.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32125612"
+	},
+	"item": [
+		{
+			"name": "Filestore",
+			"item": [
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/mixed"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/admin1/Downloads/license_opensource.pdf",
+									"disabled": true
+								},
+								{
+									"key": "tenantId",
+									"value": "pg",
+									"type": "text"
+								},
+								{
+									"key": "module",
+									"value": "HCM-ADMIN-CONSOLE-CLIENT",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/admin2/test.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm upload",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/mixed"
+							},
+							{
+								"key": "auth-token",
+								"value": "2b14fe22-8a70-4d08-bee5-538996e31b42",
+								"type": "text"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fileStoreId\": \"884bb9fc-9ce2-49ea-963a-c80d137830b7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/confirm-upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"confirm-upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get File",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/884bb9fc-9ce2-49ea-963a-c80d137830b7?tenantId=pg",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"884bb9fc-9ce2-49ea-963a-c80d137830b7"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "pg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by Metadata",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": null,\n        \"ver\": null,\n        \"ts\": null,\n        \"action\": \"POST\",\n        \"did\": null,\n        \"key\": null,\n        \"msgId\": \"5bfa85e7-dfa1-47c8-98b2-747bf552be86\",\n        \"authToken\": \"50b80fa6-bec2-438e-a168-ce5ad53770b5\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/metadata?tenantId=pg&fileStoreId=884bb9fc-9ce2-49ea-963a-c80d137830b7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"metadata"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "pg"
+								},
+								{
+									"key": "fileStoreId",
+									"value": "884bb9fc-9ce2-49ea-963a-c80d137830b7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search By Tag",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/tag?tenantId=pg&tag=test&fileStoreId=884bb9fc-9ce2-49ea-963a-c80d137830b7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"tag"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "pg"
+								},
+								{
+									"key": "tag",
+									"value": "test"
+								},
+								{
+									"key": "fileStoreId",
+									"value": "884bb9fc-9ce2-49ea-963a-c80d137830b7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Upload URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/mixed"
+							},
+							{
+								"key": "auth-token",
+								"value": "2b14fe22-8a70-4d08-bee5-538996e31b42",
+								"type": "text"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fileName\":\"new.csv\",\n    \"contentType\":\"csv\",\n    \"tag\":\"property-tax\",\n    \"module\":\"filestore-new-module\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/upload-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"upload-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload URL",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/Users/shilpam/Documents/ER Diagram.png"
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9003/digit/filestore-new-module/June/19/1750321410974Fw1q8G6A.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=digit%2F20250619%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250619T082331Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1a06f61023985d68a58b255ae7d057b8cfafd1f307efc0bac04e36934a8682c9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9003",
+							"path": [
+								"digit",
+								"filestore-new-module",
+								"June",
+								"19",
+								"1750321410974Fw1q8G6A.csv"
+							],
+							"query": [
+								{
+									"key": "X-Amz-Algorithm",
+									"value": "AWS4-HMAC-SHA256"
+								},
+								{
+									"key": "X-Amz-Credential",
+									"value": "digit%2F20250619%2Fus-east-1%2Fs3%2Faws4_request"
+								},
+								{
+									"key": "X-Amz-Date",
+									"value": "20250619T082331Z"
+								},
+								{
+									"key": "X-Amz-Expires",
+									"value": "3600"
+								},
+								{
+									"key": "X-Amz-SignedHeaders",
+									"value": "host"
+								},
+								{
+									"key": "X-Amz-Signature",
+									"value": "1a06f61023985d68a58b255ae7d057b8cfafd1f307efc0bac04e36934a8682c9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get s3 signed urls",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "auth-token",
+								"value": "2b14fe22-8a70-4d08-bee5-538996e31b42",
+								"type": "text"
+							},
+							{
+								"key": "tenantId",
+								"value": "Jul",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/download-urls?tenantId=pg&fileStoreIds=884bb9fc-9ce2-49ea-963a-c80d137830b7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"download-urls"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "pg"
+								},
+								{
+									"key": "fileStoreIds",
+									"value": "884bb9fc-9ce2-49ea-963a-c80d137830b7"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Document Category",
+			"item": [
+				{
+					"name": "Create Doc Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/mixed"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Identity\",\n    \"code\": \"AADAHAR\",\n    \"allowedFormats\": [\n        \"pdf\",\n        \"jpg\",\n        \"jpeg\",\n        \"xsm\"\n    ],\n    \"minSize\": \"1024\",\n    \"maxSize\": \"1024\",\n    \"isSensitive\": true,\n    \"description\": \"\",\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/document-categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"document-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doc By docCode",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Identity\",\n    \"code\": \"AADAHAR\",\n    \"allowedFormats\": [\n        \"pdf\",\n        \"jpg\",\n        \"jpeg\",\n        \"xsm\"\n    ],\n    \"minSize\": \"1024\",\n    \"maxSize\": \"1024\",\n    \"isSensitive\": false,\n    \"description\": \"\",\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/document-categories/AADAHAR",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"document-categories",
+								"AADAHAR"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doc List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/document-categories?type=Identity&docCode=AADAHAR&isSensitive=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"document-categories"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Identity"
+								},
+								{
+									"key": "docCode",
+									"value": "AADAHAR"
+								},
+								{
+									"key": "isSensitive",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doc By docCode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/document-categories/AADAHAR",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"document-categories",
+								"AADAHAR"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Doc By docCode",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Identity\",\n    \"code\": \"AADAHAR\",\n    \"allowedFormats\": [\n        \"pdf\",\n        \"jpg\",\n        \"jpeg\",\n        \"xsm\"\n    ],\n    \"minSize\": \"1024\",\n    \"maxSize\": \"1024\",\n    \"isSensitive\": false,\n    \"description\": \"\",\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8102/filestore/v1/files/document-categories/AADAHAR",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8102",
+							"path": [
+								"filestore",
+								"v1",
+								"files",
+								"document-categories",
+								"AADAHAR"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

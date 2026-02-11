@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "b33632a6-a3c4-45dd-8765-6496116973fe",
+		"name": "IDGen-3.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32125612"
+	},
+	"item": [
+		{
+			"name": "Register Template",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Client-ID",
+						"value": "550e8400-e29b-41d4-a716-446655440000",
+						"type": "text"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"templateCode\": \"orgId\",\n    \"config\": {\n        \"template\": \"{ORG}-{DATE:yyyyMMdd}-{SEQ}-{RAND}\",\n        \"sequence\": {\n            \"scope\": \"daily\",\n            \"start\": 1,\n            \"padding\": {\n                \"length\": 4,\n                \"char\": \"0\"\n            }\n        },\n        \"random\": {\n            \"length\": 2,\n            \"charset\": \"A-Z0-9\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8100/idgen/v1/template",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8100",
+					"path": [
+						"idgen",
+						"v1",
+						"template"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Template",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Client-ID",
+						"value": "550e8400-e29b-41d4-a716-446655440001"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"templateCode\": \"orgId\",\n    \"config\": {\n        \"template\": \"{ORG}-{DATE:yyyyMMdd}-{SEQ}-{RAND}\",\n        \"sequence\": {\n            \"scope\": \"daily\",\n            \"start\": 1,\n            \"padding\": {\n                \"length\": 3,\n                \"char\": \"0\"\n            }\n        },\n        \"random\": {\n            \"length\": 3,\n            \"charset\": \"A-Z0-9\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8100/idgen/v1/template",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8100",
+					"path": [
+						"idgen",
+						"v1",
+						"template"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Templates",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8100/idgen/v1/template?ids=da880db9-369e-484d-b4d0-37c6274485dd,bea96bb4-a4ec-449e-8b60-9e79869e2700&templateCode=orgId&version=v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8100",
+					"path": [
+						"idgen",
+						"v1",
+						"template"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "da880db9-369e-484d-b4d0-37c6274485dd,bea96bb4-a4ec-449e-8b60-9e79869e2700"
+						},
+						{
+							"key": "templateCode",
+							"value": "orgId"
+						},
+						{
+							"key": "version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Template",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8100/idgen/v1/template?templateCode=orgId&version=v2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8100",
+					"path": [
+						"idgen",
+						"v1",
+						"template"
+					],
+					"query": [
+						{
+							"key": "templateCode",
+							"value": "orgId"
+						},
+						{
+							"key": "version",
+							"value": "v2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate ID",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"templateCode\": \"orgId\",\n    \"variables\": {\n        \"ORG\": \"PG\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8100/idgen/v1/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8100",
+					"path": [
+						"idgen",
+						"v1",
+						"generate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,863 @@
+{
+  "info": {
+    "name": "Kong Gateway API Collection",
+    "description": "Complete API collection for Kong Gateway with custom plugins (dynamic-jwt, keycloak-rbac, header-enrichment)",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "kong_admin_url",
+      "value": "http://localhost:8011",
+      "description": "Kong Admin API URL (port-forward to kong-db-proxy:8001)"
+    },
+    {
+      "key": "kong_proxy_url", 
+      "value": "http://localhost:8013",
+      "description": "Kong Proxy URL (port-forward to kong-db-proxy:80)"
+    },
+    {
+      "key": "keycloak_url",
+      "value": "http://localhost:8080",
+      "description": "Keycloak URL (port-forward to keycloak:8080)"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "description": "JWT token obtained from Keycloak"
+    }
+  ],
+  "item": [
+    {
+      "name": "Kong Admin API",
+      "description": "Kong administration endpoints",
+      "item": [
+        {
+          "name": "1. Get Kong Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/status",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. List All Services",
+          "request": {
+            "method": "GET", 
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/services",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["services"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get egov-localization Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/services/egov-localization",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["services", "egov-localization"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. List All Routes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/routes",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["routes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. List All Plugins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Create Service (Manual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"egov-localization\",\n  \"url\": \"http://egov-localization.egov.svc.cluster.local:8080/localization\"\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/services",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["services"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Create Route (Manual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"localization-route\",\n  \"hosts\": [\"digit-lts.digit.org\"],\n  \"paths\": [\"/localization\"],\n  \"strip_path\": true,\n  \"service\": {\n    \"id\": \"SERVICE_ID_HERE\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/routes",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["routes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Get Specific Route",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/routes/6249b7f1-fc8e-4b68-b051-1cc96b17c0b1",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["routes", "6249b7f1-fc8e-4b68-b051-1cc96b17c0b1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Update Service Configuration",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"http://egov-localization.egov.svc.cluster.local:8080/localization\"\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/services/egov-localization",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["services", "egov-localization"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Plugin Configuration",
+      "description": "Configure Kong plugins",
+      "item": [
+        {
+          "name": "1. Add Dynamic JWT Plugin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"dynamic-jwt\",\n  \"route\": {\n    \"id\": \"ROUTE_ID_HERE\"\n  },\n  \"config\": {\n    \"keycloak_base_url\": \"http://keycloak.keycloak.svc.cluster.local:8080/keycloak-test\",\n    \"claims_to_verify\": [\"exp\"],\n    \"header_names\": [\"authorization\"],\n    \"uri_param_names\": [\"jwt\"],\n    \"cache_ttl\": 3600\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Add Keycloak RBAC Plugin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"keycloak-rbac\",\n  \"route\": {\n    \"id\": \"ROUTE_ID_HERE\"\n  },\n  \"config\": {\n    \"allowed_roles\": [\"admin\", \"user\", \"citizen\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Add Header Enrichment Plugin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"header-enrichment\",\n  \"route\": {\n    \"id\": \"ROUTE_ID_HERE\"\n  },\n  \"config\": {\n    \"enable_jwt_headers\": true,\n    \"enable_api_headers\": true,\n    \"default_tenant\": \"default\",\n    \"tenant_header_sources\": [\"X-JWT-tenant\", \"X-JWT-organization\", \"X-Tenant-ID\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Add OpenTelemetry Plugin (Global)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"opentelemetry\",\n  \"config\": {\n    \"traces_endpoint\": \"http://jaeger-collector.observability.svc.cluster.local:14268/api/traces\",\n    \"http_response_header_for_traceid\": \"X-Trace-Id\",\n    \"resource_attributes\": {\n      \"service.name\": \"kong-gateway\",\n      \"service.version\": \"3.9.1\"\n    },\n    \"headers\": {\n      \"X-Source\": \"kong-gateway\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Add Rate Limiting Plugin (Global)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"rate-limiting\",\n  \"config\": {\n    \"second\": 15,\n    \"minute\": 75,\n    \"hour\": 750,\n    \"day\": 5000,\n    \"month\": 100000,\n    \"year\": 1000000,\n    \"limit_by\": \"ip\",\n    \"policy\": \"local\",\n    \"fault_tolerant\": true,\n    \"hide_client_headers\": false,\n    \"error_code\": 503,\n    \"error_message\": \"Service Temporarily Unavailable - Rate Limit Exceeded. Please try again later.\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Add Rate Limiting Plugin (Route-Specific)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"rate-limiting\",\n  \"route\": {\n    \"id\": \"6249b7f1-fc8e-4b68-b051-1cc96b17c0b1\"\n  },\n  \"config\": {\n    \"second\": 5,\n    \"minute\": 30,\n    \"hour\": 500,\n    \"day\": 2000,\n    \"limit_by\": \"ip\",\n    \"policy\": \"local\",\n    \"fault_tolerant\": true,\n    \"hide_client_headers\": false,\n    \"error_code\": 429,\n    \"error_message\": \"Rate limit exceeded for /localization endpoint\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get Plugins by Name (Header Enrichment)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins?name=header-enrichment",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "header-enrichment"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Get Plugins by Name (Rate Limiting)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins?name=rate-limiting",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "rate-limiting"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Get Plugins for Specific Route",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/routes/6249b7f1-fc8e-4b68-b051-1cc96b17c0b1/plugins",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["routes", "6249b7f1-fc8e-4b68-b051-1cc96b17c0b1", "plugins"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Get Specific Plugin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins/56b34283-caec-4c4a-8744-1f96ab33f7f4",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins", "56b34283-caec-4c4a-8744-1f96ab33f7f4"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11. Delete Plugin",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{kong_admin_url}}/plugins/PLUGIN_ID_HERE",
+              "host": ["{{kong_admin_url}}"],
+              "path": ["plugins", "PLUGIN_ID_HERE"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Keycloak Authentication",
+      "description": "Keycloak token requests",
+      "item": [
+        {
+          "name": "1. Get Client Credentials Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.access_token);",
+                  "    console.log('JWT Token set:', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                },
+                {
+                  "key": "client_id",
+                  "value": "kong-gateway"
+                },
+                {
+                  "key": "client_secret",
+                  "value": "kong-gateway-secret"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloak_url}}/keycloak-test/realms/kong-test/protocol/openid-connect/token",
+              "host": ["{{keycloak_url}}"],
+              "path": ["keycloak-test", "realms", "kong-test", "protocol", "openid-connect", "token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get User Token (konguser)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.access_token);",
+                  "    console.log('JWT Token set:', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "client_id",
+                  "value": "kong-gateway"
+                },
+                {
+                  "key": "client_secret",
+                  "value": "kong-gateway-secret"
+                },
+                {
+                  "key": "username",
+                  "value": "konguser"
+                },
+                {
+                  "key": "password",
+                  "value": "kong123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloak_url}}/keycloak-test/realms/kong-test/protocol/openid-connect/token",
+              "host": ["{{keycloak_url}}"],
+              "path": ["keycloak-test", "realms", "kong-test", "protocol", "openid-connect", "token"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Localization Service Tests",
+      "description": "Test requests to egov-localization service via Kong Gateway",
+      "item": [
+        {
+          "name": "1. Health Check (No Auth)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              }
+            ],
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/health",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Health Check (With Auth)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/health",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Search Messages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \"1.0\",\n    \"ts\": 1234567890,\n    \"action\": \"_search\",\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{jwt_token}}\"\n  },\n  \"tenantId\": \"kong-test\",\n  \"module\": \"TEST\",\n  \"locale\": \"en_US\"\n}"
+            },
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/messages/v1/_search",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "messages", "v1", "_search"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Upsert Messages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"ver\": \"1.0\",\n    \"ts\": 1234567890,\n    \"action\": \"_upsert\",\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{jwt_token}}\"\n  },\n  \"tenantId\": \"kong-test\",\n  \"messages\": [\n    {\n      \"code\": \"TEST_MSG\",\n      \"message\": \"This is a test message via Kong Gateway\",\n      \"module\": \"TEST\",\n      \"locale\": \"en_US\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/messages/v1/_upsert",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "messages", "v1", "_upsert"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Plugin Testing",
+      "description": "Test plugin functionality",
+      "item": [
+        {
+          "name": "1. Test No JWT (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              }
+            ],
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/health",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Test Invalid JWT (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid.jwt.token"
+              }
+            ],
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/health",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Test Rate Limiting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/health",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Test Header Enrichment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Host",
+                "value": "digit-lts.digit.org"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"authToken\": \"{{jwt_token}}\"\n  },\n  \"tenantId\": \"kong-test\",\n  \"module\": \"TEST\",\n  \"locale\": \"en_US\"\n}"
+            },
+            "url": {
+              "raw": "{{kong_proxy_url}}/localization/messages/v1/_search",
+              "host": ["{{kong_proxy_url}}"],
+              "path": ["localization", "messages", "v1", "_search"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Kubernetes Ingress Management",
+      "description": "Examples for managing Kong routes via Kubernetes Ingress and kubectl commands",
+      "item": [
+        {
+          "name": "Example Ingress YAML",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# This is not an actual API call but example YAML\n# Save this as example-service-kong-ingress.yaml and apply with:\n# kubectl apply -f example-service-kong-ingress.yaml\n\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: example-service\n  namespace: egov\n  annotations:\n    # Kong plugins to apply\n    konghq.com/plugins: dynamic-jwt,keycloak-rbac,header-enrichment\n    # Preserve Host header\n    konghq.com/preserve-host: \"true\"\n    # Strip path prefix\n    konghq.com/strip-path: \"true\"\nspec:\n  # IMPORTANT: Use 'kong' ingress class\n  ingressClassName: kong\n  rules:\n  - host: digit-lts.digit.org\n    http:\n      paths:\n      - path: /example-service\n        pathType: Prefix\n        backend:\n          service:\n            name: example-service-name\n            port:\n              number: 8080",
+              "host": ["# This is not an actual API call but example YAML"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Kubectl Commands",
+      "description": "Useful kubectl commands for Kong Ingress management",
+      "item": [
+        {
+          "name": "List All Ingresses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# kubectl get ingress -A\n# Lists all ingresses across all namespaces",
+              "host": ["# kubectl get ingress -A"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Describe Specific Ingress",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# kubectl describe ingress egov-localization -n egov\n# Shows detailed information about the ingress including annotations and rules",
+              "host": ["# kubectl describe ingress egov-localization -n egov"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Ingress Plugins",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "# kubectl patch ingress egov-localization -n egov --type='merge' -p='{\"metadata\":{\"annotations\":{\"konghq.com/plugins\":\"dynamic-jwt,keycloak-rbac,header-enrichment\"}}}'\n# Updates the plugins annotation on an existing ingress",
+              "host": ["# kubectl patch ingress egov-localization -n egov"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Port Forward Kong Admin API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# kubectl port-forward service/kong-db-proxy -n egov 8011:8001\n# Creates port-forward for Kong Admin API access",
+              "host": ["# kubectl port-forward service/kong-db-proxy -n egov 8011:8001"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Port Forward Kong Proxy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# kubectl port-forward service/kong-db-proxy -n egov 8013:80\n# Creates port-forward for Kong Proxy access",
+              "host": ["# kubectl port-forward service/kong-db-proxy -n egov 8013:80"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Port Forward Keycloak",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# kubectl port-forward service/keycloak -n keycloak 8080:8080\n# Creates port-forward for Keycloak access",
+              "host": ["# kubectl port-forward service/keycloak -n keycloak 8080:8080"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Kong Ingress Controller Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# kubectl get pods -n kong\n# kubectl logs -f deployment/kong-kong -n kong\n# Checks Kong Ingress Controller status and logs",
+              "host": ["# kubectl get pods -n kong"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Advanced Plugin Queries",
+      "description": "Advanced queries for plugin management using jq filters",
+      "item": [
+        {
+          "name": "Filter Plugins by Name with Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# curl -s \"{{kong_admin_url}}/plugins\" | jq '.data[] | select(.name == \"header-enrichment\") | {name: .name, route: .route.id, enabled: .enabled}'\n# Use with Kong Admin API to filter specific plugins",
+              "host": ["# Example jq filter command"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Route Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# curl -s \"{{kong_admin_url}}/routes\" | jq '.data[0] | {id: .id, paths: .paths, hosts: .hosts}'\n# Gets route details with specific fields",
+              "host": ["# Example jq filter command"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categorize Rate Limiting Plugins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "# curl -s \"{{kong_admin_url}}/plugins\" | jq '.data[] | select(.name == \"rate-limiting\") | {name: .name, route: .route, scope: (if .route then \"route-specific\" else \"global\" end)}'\n# Categorizes rate limiting plugins as global or route-specific",
+              "host": ["# Example jq filter command"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+} 

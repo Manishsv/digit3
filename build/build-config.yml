@@ -15,45 +15,30 @@ config:
       - work-dir: "code/services/audit-service/src/main/resources/db"
         image-name: "audit-service-db"
 
-  - name: "builds/digit3/code/services/boundary-service"
-    build:
-      - work-dir: "code/services/boundary-service"
-        image-name: "boundary-service"
-        dockerfile: "build/maven/Dockerfile"
-      - work-dir: "code/services/boundary-service/src/main/resources/db"
-        image-name: "boundary-service-db"
-
-  - name: "builds/digit3/code/services/filestore"
-    build:
-      - work-dir: "code/services/filestore"
-        image-name: "filestore"
-        dockerfile: "build/maven/Dockerfile"
-      - work-dir: "code/services/filestore/src/main/resources/db"
-        image-name: "filestore-db"
 
   - name: "builds/digit3/code/services/idgen"
     build:
       - work-dir: "code/services/idgen"
         image-name: "idgen"
-        dockerfile: "build/maven/Dockerfile"
-      - work-dir: "code/services/idgen/src/main/resources/db"
+        dockerfile: "build/go/Dockerfile"
+      - work-dir: "code/services/idgen/db"
         image-name: "idgen-db"
 
   - name: "builds/digit3/code/services/localization"
     build:
       - work-dir: "code/services/localization"
         image-name: "localization"
-        dockerfile: "build/maven/Dockerfile"
-      - work-dir: "code/services/localization/src/main/resources/db"
+        dockerfile: "build/go/Dockerfile"
+      - work-dir: "code/services/localization/db"
         image-name: "localization-db"
 
-  - name: "builds/digit3/code/services/url-shortening"
+  - name: "builds/digit3/code/services/url-shortener"
     build:
-      - work-dir: "code/services/url-shortening"
-        image-name: "url-shortening"
-        dockerfile: "build/maven/Dockerfile"
-      - work-dir: "code/services/url-shortening/src/main/resources/db"
-        image-name: "url-shortening-db"
+      - work-dir: "code/services/url-shortener"
+        image-name: "url-shortener"
+        dockerfile: "build/go/Dockerfile"
+      - work-dir: "code/services/url-shortener/db"
+        image-name: "url-shortener-db"
 
   - name: "builds/digit3/code/services/user"
     build:
@@ -62,14 +47,6 @@ config:
         dockerfile: "build/maven/Dockerfile"
       - work-dir: "code/services/user/src/main/resources/db"
         image-name: "user-db"
-
-  - name: "builds/digit3/code/services/workflow"
-    build:
-      - work-dir: "code/services/workflow"
-        image-name: "workflow"
-        dockerfile: "build/maven/Dockerfile"
-      - work-dir: "code/services/workflow/src/main/resources/db"
-        image-name: "workflow-db"
 
   - name: "builds/digit3/code/services/gateway"
     build:
@@ -132,7 +109,7 @@ config:
       - work-dir: "code/services/notification"
         image-name: "notification"
         dockerfile: "build/go/Dockerfile"
-      - work-dir: "code/services/notification/src/main/resources/db"
+      - work-dir: "code/services/notification/db"
         image-name: "notification-db"
 
   - name: "builds/digit3/code/services/template-config"
@@ -140,7 +117,7 @@ config:
       - work-dir: "code/services/template-config"
         image-name: "template-config"
         dockerfile: "build/go/Dockerfile"
-      - work-dir: "code/services/template-config/src/main/resources/db"
+      - work-dir: "code/services/template-config/db"
         image-name: "template-config-db"
 
   - name: "builds/digit3/code/services/clamav-wrapper"
@@ -148,11 +125,35 @@ config:
       - work-dir: "code/services/clamav-wrapper"
         image-name: "clamav-wrapper"
         dockerfile: "build/go/Dockerfile"
-        
   - name: "builds/digit3/code/services/workflow"
     build:
       - work-dir: "code/services/workflow"
         image-name: "workflow"
         dockerfile: "build/go/Dockerfile"
       - work-dir: "code/services/workflow/db"
-        image-name: "template-config-db"
+        image-name: "workflow-db"
+
+  - name: "builds/digit3/code/services/account"
+    build:
+      - work-dir: "code/services/account"
+        image-name: "account"
+        dockerfile: "code/services/account/Dockerfile"
+      - work-dir: "code/services/account/db"
+        image-name: "account-db"
+
+  - name: "builds/digit3/code/services/boundary"
+    build:
+      - work-dir: "code/services/boundary"
+        image-name: "boundary"
+        dockerfile: "build/go/Dockerfile"
+      - work-dir: "code/services/boundary/db"
+        image-name: "boundary-db"
+
+  - name: "builds/digit3/code/services/filestore"
+    build:
+      - work-dir: "code/services/filestore"
+        image-name: "filestore"
+        dockerfile: "build/go/Dockerfile"
+      - work-dir: "code/services/filestore/db"
+        image-name: "filestore-db"
+

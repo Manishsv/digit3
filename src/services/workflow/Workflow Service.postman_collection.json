@@ -1,0 +1,934 @@
+{
+	"info": {
+		"_postman_id": "6291678a-21fd-4d33-ab6a-c2c07f8229fe",
+		"name": "Workflow Service",
+		"description": "Complete workflow service API collection tested on deployed service (port 9090). Includes spec-compliant Action APIs, complete Trade License workflow, RBAC testing, and all CRUD operations.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48812509",
+		"_collection_link": "https://orange-crescent-418337.postman.co/workspace/digit3.0~8b9c2224-29cd-4eee-a007-89e233ffe6b4/collection/35025473-6291678a-21fd-4d33-ab6a-c2c07f8229fe?action=share&source=collection_link&creator=48812509"
+	},
+	"item": [
+		{
+			"name": "Process",
+			"item": [
+				{
+					"name": "GET All Processes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Process Definitions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/definition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"definition"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE Process",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Trade License Approval\",\n  \"code\": \"TRADE_LICENSE_TEST4\",\n  \"description\": \"trade license approval workflow\",\n  \"version\": \"1.0\",\n  \"sla\": 604800\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE Process",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Updated workflow with enhanced features\",\n  \"sla\": 518400\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/{{tradeProcessId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"{{tradeProcessId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "State",
+			"item": [
+				{
+					"name": "GET States for Process",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/{{tradeProcessId}}/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"{{tradeProcessId}}",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get State by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{stateId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{stateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE State (Applied)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"APPLIED\",\n  \"name\": \"Application Submitted\",\n  \"description\": \"Trade license application submitted\",\n  \"sla\": 86400,\n  \"isInitial\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/{{tradeProcessId}}/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"{{tradeProcessId}}",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE State (Verfiy)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"VERIFY\",\n  \"name\": \"Under Verification\",\n  \"description\": \"Trade license Under Verification\",\n  \"isInitial\": false,\n  \"sla\": 72000\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/{{tradeProcessId}}/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"{{tradeProcessId}}",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE State (Approve)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"APPROVED\",\n  \"name\": \"Application Approved\",\n  \"description\": \"Trade license application approved\",\n  \"sla\": 86400,\n  \"isInitial\": false\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/{{tradeProcessId}}/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"{{tradeProcessId}}",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE State (Reject)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"REJECTED\",\n  \"name\": \"Application Rejected\",\n  \"description\": \"Trade license application rejected\",\n  \"sla\": 86400,\n  \"isInitial\": false\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/process/{{tradeProcessId}}/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"process",
+								"{{tradeProcessId}}",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE State",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Updated state with new requirements\",\n  \"sla\": 72000\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{appliedStateId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{appliedStateId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Action",
+			"item": [
+				{
+					"name": "GET Actions for State",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{stateId}}/action",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{stateId}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE Sumbit  for verification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Submit for Verification\",\n  \"nextState\": \"{{verificationStateId}}\",\n  \"attributeValidation\": {\n    \"attributes\": {\n      \"roles\": [\"CITIZEN\", \"ADMIN\"]\n    },\n    \"assigneeCheck\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{appliedStateId}}/action",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{appliedStateId}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE Approve action",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Approve application\",\n  \"nextState\": \"{{approveStateId}}\",\n  \"attributeValidation\": {\n    \"attributes\": {\n      \"roles\": [\"VERIFIER\"]\n    },\n    \"assigneeCheck\": false\n  }\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{VERIFY_STATE_ID}}/action",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{VERIFY_STATE_ID}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE Reject action",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Reject application\",\n  \"nextState\": \"{{rejectStateId}}\",\n  \"attributeValidation\": {\n    \"attributes\": {\n      \"roles\": [\"VERIFIER\"]\n    },\n    \"assigneeCheck\": false\n  }\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{VERIFY_STATE_ID}}/action",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{VERIFY_STATE_ID}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE send back action",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Send Back for Correction\",\n  \"nextState\": \"{{StateId}}\",\n  \"attributeValidation\": {\n    \"attributes\": {\n      \"roles\": [\"VERIFIER\"]\n    },\n    \"assigneeCheck\": false\n  }\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/state/{{VERIFY_STATE_ID}}/action",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"state",
+								"{{VERIFY_STATE_ID}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE Action",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Approve Application\",\n  \"roles\": [\"VERIFIER\", \"SUPERVISOR\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/action/{{actionId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"action",
+								"{{actionId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transition",
+			"item": [
+				{
+					"name": "Verification Flow - Step 1: Verify application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"processId\": \"{{tradeProcessId}}\",\n  \"entityId\": \"trade-approve-001\",\n  \"action\": \"Submit for Verification\",\n  \"comment\": \"Submitting complete application for approval\",\n  \"attributes\": {\n    \"roles\": [\"CITIZEN\", \"VERIFIER\", \"ADMIN\"],\n    \"jurisdiction\": [\"Punjab.Amritsar\"]\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/transition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"transition"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Flow - Step 2: Approve application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"processId\": \"{{tradeProcessId}}\",\n  \"entityId\": \"trade-approve-001\",\n  \"action\": \"Approve application\",\n  \"comment\": \"Application Approved\",\n  \"attributes\": {\n    \"roles\": [\"VERIFIER\"],\n    \"jurisdiction\": [\"Punjab.Amritsar\"]\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/transition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"transition"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject flow - Step 2 : Reject application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"processId\": \"{{tradeProcessId}}\",\n  \"entityId\": \"trade-approve-001\",\n  \"action\": \"Reject application\",\n  \"comment\": \"Application Rejected\",\n  \"attributes\": {\n    \"roles\": [ \"VERIFIER\"],\n    \"jurisdiction\": [\"Punjab.Amritsar\"]\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/transition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"transition"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SEND BACK Flow - Step 2: Send Back",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "admin-user"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"processId\": \"{{tradeProcessId}}\",\n  \"entityId\": \"trade-sendback-001\",\n  \"action\": \"Send Back for Correction\",\n  \"comment\": \"Need additional documents - sending back\",\n  \"attributes\": {\n    \"roles\": [\"VERIFIER\"]\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/transition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"transition"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Process instance",
+			"item": [
+				{
+					"name": "GET History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/transition?entityId=trade-approve-001&processId={{tradeProcessId}}&history=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"transition"
+							],
+							"query": [
+								{
+									"key": "entityId",
+									"value": "trade-approve-001"
+								},
+								{
+									"key": "processId",
+									"value": "{{tradeProcessId}}"
+								},
+								{
+									"key": "history",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET current",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-ID",
+								"value": "pg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/workflow/v1/transition?entityId=trade-approve-001&processId={{tradeProcessId}}&history=false",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"workflow",
+								"v1",
+								"transition"
+							],
+							"query": [
+								{
+									"key": "entityId",
+									"value": "trade-approve-001"
+								},
+								{
+									"key": "processId",
+									"value": "{{tradeProcessId}}"
+								},
+								{
+									"key": "history",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8085/workflow/v1"
+		},
+		{
+			"key": "tenantId",
+			"value": "pg"
+		},
+		{
+			"key": "tradeProcessId",
+			"value": "8ad5a87d-5601-41c1-a19c-65f7183a92fd"
+		},
+		{
+			"key": "appliedStateId",
+			"value": "1c8784fe-8794-4331-bf27-9ffb2ca2ad23"
+		},
+		{
+			"key": "verificationStateId",
+			"value": "956f2cc5-4ab2-4e97-bb3d-f4e512746268"
+		},
+		{
+			"key": "approvedStateId",
+			"value": "e82e55eb-bed2-4cd4-b19a-33a1d5ee6130"
+		},
+		{
+			"key": "rejectedStateId",
+			"value": "5dad29d5-e3ed-4e0f-abc3-2fafaf915151"
+		}
+	]
+}

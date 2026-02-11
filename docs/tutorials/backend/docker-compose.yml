@@ -1,0 +1,1060 @@
+version: '3.8'
+
+# Reusable logging policy for all services (prevents host disk bloat)
+x-logging: &json-logging
+  driver: json-file
+  options:
+    max-size: "50m"
+    max-file: "5"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    mem_limit: 1g
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    labels:
+      - env=dev
+      - app=postgres
+    logging: *json-logging
+
+  redis:
+    container_name: redis
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    labels:
+      - env=dev
+      - app=redis
+    logging: *json-logging
+
+  workflow-migration:
+    container_name: workflow-migration
+    image: egovio/workflow-db:develop-eae753d
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: workflow_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=workflow-migration
+    logging: *json-logging
+
+  workflow-service:
+    container_name: workflow-service
+    image: egovio/workflow:develop-eae753d
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      SERVER_PORT: 8080
+    ports:
+      - "8085:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      workflow-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=workflow-service
+    logging: *json-logging
+
+  localization-migration:
+    container_name: localization-migration
+    image: egovio/localization-db:develop-eae753d
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: localization_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=localization-migration
+    logging: *json-logging
+
+  localization:
+    container_name: localization
+    image: egovio/localization:develop-eae753d
+    environment:
+      REST_PORT: 8080
+      GRPC_PORT: 8089
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+      CACHE_EXPIRATION: 24h
+    ports:
+      - "8088:8080"
+      - "8089:8089"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      localization-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=localization
+    logging: *json-logging
+
+  keycloak:
+    container_name: keycloak
+    image: egovio/keycloak:keycloak-spi-multiarch
+    mem_limit: 1g
+    environment:
+      KC_PROXY: edge
+      KC_HOSTNAME: keycloak
+      KC_HOSTNAME_PORT: "8080"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_RELATIVE_PATH: /keycloak
+      KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
+      KC_DB: postgres
+      DB_PORT: 5432
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_EVENTS_LISTENERS: jboss-logging,register-citizen-listener
+      KC_SPI_EVENTS_LISTENER_REGISTER_CITIZEN_LISTENER_ENABLED: "true"
+      KC_FEATURES: admin-fine-grained-authz,token-exchange
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - env=dev
+      - app=keycloak
+    logging: *json-logging
+
+  notification-migration:
+    container_name: notification-migration
+    image: egovio/notification-db:develop-notification-version-update-6b58bcb
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: notification_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=notification-migration
+    logging: *json-logging
+
+  notification:
+    container_name: notification
+    image: egovio/notification:develop-notification-version-update-6b58bcb
+    environment:
+      HTTP_PORT: 8080
+      SERVER_CONTEXT_PATH: /notification
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+      MIGRATION_SCRIPT_PATH: ./migrations
+      MIGRATION_ENABLED: "false"
+      TEMPLATE_CONFIG_HOST: http://template-config:8080
+      TEMPLATE_CONFIG_PATH: /template-config/v1/render
+      FILESTORE_HOST: http://filestore:8080
+      FILESTORE_PATH: /filestore/v1/files
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USERNAME: example@gmail.com
+      SMTP_PASSWORD: ""
+      SMTP_FROM_ADDRESS: example@gmail.com
+      SMTP_FROM_NAME: egov
+      SMS_PROVIDER_URL: http://api.smscountry.com/SMSCwebservice_bulk.aspx
+      SMS_PROVIDER_USERNAME: ""
+      SMS_PROVIDER_PASSWORD: ""
+      SMS_PROVIDER_CONTENT_TYPE: application/x-www-form-urlencoded
+      MESSAGE_BROKER_ENABLED: "true"
+      MESSAGE_BROKER_TYPE: REDIS
+      EMAIL_TOPIC: notification-email
+      SMS_TOPIC: notification-sms
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+    ports:
+      - "8091:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      notification-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=notification
+    logging: *json-logging
+
+  template-config-migration:
+    container_name: template-config-migration
+    image: egovio/template-config-db:develop-template-config-version-1caa4a6
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: template_config_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=template-config-migration
+    logging: *json-logging
+
+  template-config:
+    container_name: template-config
+    image: egovio/template-config:develop-template-config-version-1caa4a6
+    environment:
+      HTTP_PORT: 8080
+      SERVER_CONTEXT_PATH: /template-config
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+      MIGRATION_SCRIPT_PATH: ./migrations
+      MIGRATION_ENABLED: "false"
+    ports:
+      - "8092:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      template-config-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=template-config
+    logging: *json-logging
+
+  boundary-migration:
+    container_name: boundary-migration
+    image: egovio/boundary-db:develop-ed6d207
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: boundary_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=boundary-migration
+    logging: *json-logging
+
+  boundary-service:
+    container_name: boundary-service
+    image: egovio/boundary:develop-0d9e421
+    environment:
+      SERVER_PORT: 8080
+      SERVER_CONTEXT_PATH: /boundary
+      SERVER_READ_TIMEOUT: 30
+      SERVER_WRITE_TIMEOUT: 30
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+      FILESTORE_BASEPATH: http://filestore:8080
+      FILESTORE_ENDPOINT: /filestore/v1/files
+      CACHE_TYPE: redis
+      CACHE_REDIS_ADDR: redis:6379
+      CACHE_REDIS_PASSWORD: ""
+      CACHE_REDIS_DB: 0
+    ports:
+      - "8093:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      boundary-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=boundary-service
+    logging: *json-logging
+
+
+  account-migration:
+    container_name: account-migration
+    image: egovio/account-db:develop-49f70d0
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: account_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=account-migration
+    logging: *json-logging
+
+  account:
+    container_name: account
+    image: egovio/account:develop-0d9e421
+    environment:
+      SERVER_PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+      KEYCLOAK_BASE_URL: http://keycloak:8080/keycloak
+      KEYCLOAK_ADMIN_USER: admin
+      KEYCLOAK_ADMIN_PASS: admin
+      KEYCLOAK_REALM_CONFIG_PATH: realm_config.json
+      NOTIFICATION_BASE_URL: http://notification:8080
+      CITIZEN_BROKER_CLIENT_ID: citizen-broker
+      CITIZEN_BROKER_CLIENT_SECRET: sW2iIWd6Da8JpeGoAuWWcnbDFYT31rk3-clientsecrete
+    ports:
+      - "8094:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      account-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=account
+    logging: *json-logging
+
+  kong-migration:
+    container_name: kong-migration
+    image: mithunhegdeegov/gateway-kong:multiarch1
+    command: ["kong", "migrations", "bootstrap"]
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_PORT: 5432
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: password
+      KONG_PG_DATABASE: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=kong-migration
+    logging: *json-logging
+
+  kong:
+    container_name: kong
+    image: mithunhegdeegov/gateway-kong:multiarch2
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_PORT: 5432
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: password
+      KONG_PG_DATABASE: postgres
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_PLUGINS: "bundled,dynamic-jwt,keycloak-rbac,header-enrichment"
+      KONG_PLUGIN_DYNAMIC_JWT_KEYCLOAK_BASE_URL: "http://keycloak:8080/keycloak"
+      KONG_PLUGIN_KEYCLOAK_RBAC_ALLOWED_ROLES: "admin,user"
+    ports:
+      - "8095:8000"   # Proxy HTTP
+      - "8096:8443"   # Proxy HTTPS  
+      - "8097:8001"   # Admin API
+    depends_on:
+      kong-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=kong
+    logging: *json-logging
+
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    ports:
+      - "9002:9000"   # MinIO API
+      - "9003:9001"   # MinIO Console
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    labels:
+      - env=dev
+      - app=minio
+    logging: *json-logging
+
+  minio-init:
+    container_name: minio-init
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+        /usr/bin/mc alias set local http://minio:9000 minioadmin minioadmin &&
+        /usr/bin/mc mb local/digit || true
+      "
+    restart: "no"
+    labels:
+      - env=dev
+      - app=minio-init
+    logging: *json-logging
+
+  vault:
+    container_name: vault
+    image: hashicorp/vault:1.17
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8202:8200"
+    volumes:
+      - vault_data:/vault/data
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: myroot
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    command: vault server -dev
+    healthcheck:
+      test: ["CMD", "sh", "-c", "VAULT_ADDR=http://127.0.0.1:8200 vault status"]
+      interval: 30s
+    labels:
+      - env=dev
+      - app=vault
+    logging: *json-logging
+
+  url-shortener-migration:
+    container_name: url-shortener-migration
+    image: egovio/url-shortener-db:develop-eae753d
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: url_shortener_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=url-shortener-migration
+    logging: *json-logging
+
+  urlshortener:
+    container_name: urlshortener
+    image: egovio/url-shortener:develop-eae753d
+    environment:
+      HTTP_PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+      CACHE_ENABLED: "true"
+      CACHE_TYPE: redis
+      CACHE_TTL: "24*time.Hour"
+      HOST_NAME: http://localhost:8098/
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+    ports:
+      - "8098:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      url-shortener-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=urlshortener
+    logging: *json-logging
+
+  idgen-migration:
+    container_name: idgen-migration
+    image: egovio/idgen-db:develop-90ee41f
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: idgen_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=idgen-migration
+    logging: *json-logging
+
+  idgen:
+    container_name: idgen
+    image: egovio/idgen:develop-90ee41f
+    environment:
+      HTTP_PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      DB_SSL_MODE: disable
+    ports:
+      - "8100:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      idgen-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=idgen
+    logging: *json-logging
+
+  mdms-v2-migration:
+    container_name: mdms-v2-migration
+    image: egovio/mdms-v2-db:mdms-aaradhya-1-ceb5f64
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: mdms_v2_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=mdms-v2-migration
+    logging: *json-logging
+
+  mdms-v2:
+    container_name: mdms-v2
+    image: egovio/mdms-v2:mdms-aaradhya-1-ceb5f64
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_FLYWAY_ENABLED: "false"
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_CACHE_EXPIRATION_HOURS: 1
+      SPRING_REDIS_PASSWORD: ""
+      SPRING_REDIS_DB: 0
+    ports:
+      - "8099:8094"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      mdms-v2-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=mdms-v2
+    logging: *json-logging
+
+  filestore-migration:
+    container_name: filestore-migration
+    image: egovio/filestore-db:develop-eae753d
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: filestore_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=filestore-migration
+    logging: *json-logging
+
+  filestore:
+    container_name: filestore
+    image: egovio/filestore:develop-eae753d
+    mem_limit: 512m
+    environment:
+      SERVER_PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_SSL_MODE: disable
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      MINIO_BUCKET: digit
+      MINIO_READ_BUCKET: digit
+      MINIO_USE_SSL: "false"
+      ISNFSSTORAGEENABLED: "false"
+      ISS3ENABLED: "true"
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      IS_BUCKET_FIXED: "true"
+      FIXED_BUCKETNAME: unified-dev-bucket-s3
+      JAVA_OPTS: -Xmx256m -Xms256m
+      MINIO_ENDPOINT: minio:9000
+      FLYWAY_ENABLED: "false"
+      SPRING_FLYWAY_ENABLED: "false"
+      MANAGEMENT_ENDPOINTS_WEB_BASE_PATH: /
+      APP_TIMEZONE: Asia/Kolkata
+      IS_ENVIRONMENT_CENTRAL_INSTANCE: "false"
+      SPRING_JPA_SHOW_SQL: "false"
+      TRACER_OPENTRACING_ENABLED: "false"
+    ports:
+      - "8102:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      filestore-migration:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:8080/filestore/health > /dev/null"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    labels:
+      - env=dev
+      - app=filestore
+    logging: *json-logging
+
+  registry-migration:
+    container_name: registry-migration
+    image: egovio/registry-db:registry-service-2876a8b
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: registry_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=registry-migration
+    logging: *json-logging
+
+  registry:
+    container_name: registry
+    image: egovio/registry:registry-service-2876a8b
+    environment:
+      PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_SSL_MODE: disable
+      RUN_MIGRATIONS: "true"
+      MIGRATION_PATH: db/migration
+      MIGRATION_TIMEOUT: 300s
+      VAULT_REQUIRED: "false"
+      VAULT_TRANSIT_MOUNT: transit
+      VAULT_KEY_PREFIX: registry-
+      VAULT_TIMEOUT: 30s
+      LOG_LEVEL: info
+      GIN_MODE: release
+      IDGEN_BASE_URL: http://idgen:8080/idgen
+      IDGEN_TEMPLATE_ID: registryId
+      IDGEN_ORG_VALUE: REGISTRY
+      IDGEN_HTTP_TIMEOUT: 5s
+      OTEL_TRACES_EXPORTER: none
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+    ports:
+      - "8104:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      idgen:
+        condition: service_started
+      registry-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=registry
+    logging: *json-logging
+
+  individual-migration:
+    container_name: individual-migration
+    image: egovio/individual-db:individualSVC-5ad5af0
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: individual_service_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=individual-migration
+    logging: *json-logging
+
+  individual:
+    container_name: individual
+    image: egovio/individual:individualSVC-5ad5af0
+    environment:
+      SERVER_PORT: 8080
+      SERVER_CONTEXT_PATH: /individual
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_SSL_MODE: disable
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      MAX_IDLE_CONNS: 10
+      MAX_OPEN_CONNS: 50
+      CONN_MAX_LIFETIME: 5m
+      LOG_LEVEL: info
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+      REDIS_POOL_SIZE: 10
+      IDGEN_HOST: http://idgen:8080
+      IDGEN_PATH: idgen/v1/generate
+      IDGEN_ENABLED: "true"
+      IDGEN_INDIVIDUAL_ID_FORMAT: individual
+      STATE_LEVEL_TENANT_ID: pg
+      EGOV_MDMS_HOST: http://mdms-v2:8094
+      EGOV_MDMS_SEARCH_ENDPOINT: /mdms-v2/v1/_search
+      LOCALIZATION_SERVICE_HOST: http://localization:8080
+      LOCALIZATION_SEARCH_PATH: /localization/messages/v1/_search
+      KEYCLOAK_BASE_URL: http://keycloak:8080/keycloak
+      KEYCLOAK_ENABLED: "true"
+      KEYCLOAK_ASSIGNABLE_ROLES: ASSIGNER,CITIZEN
+      BOUNDARY_SERVICE_HOST: http://boundary-service:8080
+      BOUNDARY_SEARCH_PATH: /boundary/v1
+      BOUNDARY_HIERARCHY: HCM-Hierarchy
+      VAULT_HOST: http://vault:8200
+      VAULT_ENCRYPT_PATH: encrypt/
+      VAULT_TOKEN: myroot
+      VAULT_TRANSIT_BASE_PATH: v1/transit/
+      VAULT_SYS_MOUNT_TRANSIT_PATH: v1/sys/mounts/transit
+      VAULT_KEY_CREATE_PATH: keys/
+      VAULT_ASYM_SUFFIX: -asym
+      VAULT_ASYM_ENCRYPT_PATH: encrypt/
+      VAULT_AUTH_KUBERNETES_LOGIN_PATH: v1/auth/kubernetes/login
+      VAULT_AUTH_KUBERNETES_ROLE: enc-service-role
+      VAULT_K8S_TOKEN_PATH: /var/run/secrets/kubernetes.io/serviceaccount/token
+      VAULT_SIGN_PATH: sign/
+      VAULT_VERIFY_PATH: verify/
+      VAULT_DECRYPT_PATH: decrypt/
+      VAULT_ENABLED: "true"
+      VAULT_ENCRYPT_KEY: IndividualEncrypt
+      VAULT_DECRYPT_KEY: IndividualEncrypt
+      JAEGER_SERVICE_NAME: individual
+      JAEGER_SAMPLER_TYPE: remote
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: $(JAEGER_AGENT_HOST):5778
+      TRACER_OPENTRACING_ENABLED: "true"
+    ports:
+      - "8105:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      idgen:
+        condition: service_started
+      mdms-v2:
+        condition: service_started
+      localization:
+        condition: service_started
+      boundary-service:
+        condition: service_started
+      individual-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=individual
+    logging: *json-logging
+
+  hrms-migration:
+    container_name: hrms-migration
+    image: egovio/hrms-db:hrms-0bd4930
+    entrypoint: ["/usr/bin/migrate.sh"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+      SCHEMA_TABLE: hrms_schema
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=hrms-migration
+    logging: *json-logging
+
+  hrms:
+    container_name: hrms
+    image: egovio/hrms:hrms-0bd4930
+    environment:
+      SERVER_PORT: 8080
+      SERVER_CONTEXT_PATH: /hrms
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_SSL_MODE: disable
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      IDGEN_HOST: http://idgen:8080
+      IDGEN_PATH: idgen/v1/generate
+      IDGEN_NAME: hrms.idgen
+      BOUNDARY_HOST: http://boundary-service:8080
+      BOUNDARY_ENABLED: "true"
+      INDIVIDUAL_HOST: http://individual:8080/
+      INDIVIDUAL_ENABLED: "true"
+      KEYCLOAK_BASE_URL: http://keycloak:8080/keycloak
+      KEYCLOAK_ENABLED: "true"
+      JAEGER_SERVICE_NAME: hrms
+      JAEGER_SAMPLER_TYPE: remote
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: $(JAEGER_AGENT_HOST):5778
+      TRACER_OPENTRACING_ENABLED: "true"
+    ports:
+      - "8106:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      idgen:
+        condition: service_started
+      boundary-service:
+        condition: service_started
+      individual:
+        condition: service_started
+      hrms-migration:
+        condition: service_completed_successfully
+    labels:
+      - env=dev
+      - app=hrms
+    logging: *json-logging
+
+  # ---------- Centralized logging stack ----------
+  loki:
+    container_name: loki
+    image: grafana/loki:2.9.8
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki_data:/loki
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=loki
+    logging: *json-logging
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.9.8
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+    depends_on:
+      - loki
+    restart: unless-stopped
+    ports:
+      - "9080:9080"   # Promtail UI (targets, metrics) - optional expose
+    labels:
+      - env=dev
+      - app=promtail
+    logging: *json-logging
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:11.1.3
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      - GF_PROVISIONING_PATH=/etc/grafana/provisioning
+    depends_on:
+      - loki
+      - prometheus
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=grafana
+    logging: *json-logging
+
+  # ---------- Monitoring stack ----------
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=prometheus
+    logging: *json-logging
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    ports:
+      - "8103:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=cadvisor
+    logging: *json-logging
+
+  node-exporter:
+    container_name: node-exporter
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=node-exporter
+    logging: *json-logging
+
+  kong-setup:
+    container_name: kong-setup
+    image: mithunhegdeegov/kong_setup:multiarch7
+    depends_on:
+      kong:
+        condition: service_healthy
+    restart: "no"
+    labels:
+      - env=dev
+      - app=kong-setup
+    logging: *json-logging
+
+volumes:
+  postgres_data:
+    name: postgres_data
+  redis_data:
+    name: redis_data
+  minio_data:
+    name: minio_data
+  vault_data:
+    name: vault_data
+  loki_data:
+    name: loki_data
+  grafana_data:
+    name: grafana_data
+  prometheus_data:
+    name: prometheus_data 

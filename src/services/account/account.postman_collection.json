@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "2b73dd49-dbd0-40d6-a799-5e62c7c287cf",
+		"name": "account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28209461"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-client"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tenant\": {\n      \"name\": \"account1\",\n      \"email\": \"test@example.com\",\n      \"isActive\": true,\n      \"additionalAttributes\": {}\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8094/account/v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8094",
+					"path": [
+						"account",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Account",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "your-client-id"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8094/account/v1?code=ACCOUNT1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8094",
+					"path": [
+						"account",
+						"v1"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "ACCOUNT1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-client"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tenant\":   {\n            \"id\": \"e3eca60c-3470-4877-97e7-c9a866ce1ec9\",\n            \"code\": \"ACCOUNT1\",\n            \"name\": \"account1\",\n            \"email\": \"test@example.com\",\n            \"additionalAttributes\": {},\n            \"isActive\": false,\n            \"createdBy\": \"test-client\",\n            \"lastModifiedBy\": \"test-client\",\n            \"createdTime\": 1758865184,\n            \"lastModifiedTime\": 1758865184\n        }\n  }"
+				},
+				"url": {
+					"raw": "http://localhost:8094/account/v1/e3eca60c-3470-4877-97e7-c9a866ce1ec9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8094",
+					"path": [
+						"account",
+						"v1",
+						"e3eca60c-3470-4877-97e7-c9a866ce1ec9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account Config",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-client"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tenantConfig\": {\n      \"code\": \"ACCOUNT1\",\n      \"name\": \"Test Tenant Config\",\n      \"isActive\": true,\n      \"defaultLoginType\": \"OTP\",\n      \"otpLength\": \"6\",\n      \"enableUserBasedLogin\": true,\n      \"languages\": [\"en\"],\n      \"additionalAttributes\": {},\n      \"documents\": [\n        {\n          \"tenantId\": \"ACCOUNT1\",\n          \"type\": \"logoUrl\",\n          \"fileStoreId\": \"string\",\n          \"url\": \"https://example.com/logo.png\",\n          \"isActive\": true,\n          \"auditDetails\": {\n            \"createdBy\": \"test-client\",\n            \"lastModifiedBy\": \"test-client\",\n            \"createdTime\": 0,\n            \"lastModifiedTime\": 0\n          }\n        }\n      ]\n    }\n  }"
+				},
+				"url": {
+					"raw": "http://localhost:8094/account/v1/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8094",
+					"path": [
+						"account",
+						"v1",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Account Config",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "your-client-id"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8094/account/v1/config?code=ACCOUNT1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8094",
+					"path": [
+						"account",
+						"v1",
+						"config"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "ACCOUNT1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account Config",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "your-client-id"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tenantConfig\": {\n            \"id\": \"1c67aac2-0015-45a5-a1d3-1b563becd73d\",\n            \"defaultLoginType\": \"OTP\",\n            \"otpLength\": \"66\",\n            \"code\": \"ACCOUNT1\",\n            \"name\": \"Test Tenant Config\",\n            \"enableUserBasedLogin\": true,\n            \"additionalAttributes\": {},\n            \"documents\": [\n                {\n                    \"id\": \"73f325ad-81be-4f92-ba9c-4dde6bcf8704\",\n                    \"tenantId\": \"ACCOUNT1\",\n                    \"tenantConfigId\": \"1c67aac2-0015-45a5-a1d3-1b563becd73d\",\n                    \"type\": \"logoUrl\",\n                    \"fileStoreId\": \"string\",\n                    \"url\": \"https://example.com/logo.png\",\n                    \"isActive\": true,\n                    \"auditDetails\": {\n                        \"createdBy\": \"test-client\",\n                        \"lastModifiedBy\": \"test-client\",\n                        \"createdTime\": 1758865387,\n                        \"lastModifiedTime\": 1758865387\n                    }\n                }\n            ],\n            \"isActive\": true,\n            \"languages\": [\n                \"en\"\n            ],\n            \"auditDetails\": {\n                \"createdBy\": \"test-client\",\n                \"lastModifiedBy\": \"test-client\",\n                \"createdTime\": 1758865387,\n                \"lastModifiedTime\": 1758865387\n            }\n        }\n  }"
+				},
+				"url": {
+					"raw": "http://localhost:8094/account/v1/config/1c67aac2-0015-45a5-a1d3-1b563becd73d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8094",
+					"path": [
+						"account",
+						"v1",
+						"config",
+						"1c67aac2-0015-45a5-a1d3-1b563becd73d"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package localization.v1;
+
+option go_package = "localization/api/proto/localization/v1;localizationv1";
+
+import "google/protobuf/timestamp.proto";
+
+// Localization service definition
+service LocalizationService {
+  // Search messages
+  rpc SearchMessages(SearchMessagesRequest) returns (SearchMessagesResponse) {}
+  
+  // Create messages
+  rpc CreateMessages(CreateMessagesRequest) returns (CreateMessagesResponse) {}
+  
+  // Update messages
+  rpc UpdateMessages(UpdateMessagesRequest) returns (UpdateMessagesResponse) {}
+  
+  // Upsert messages
+  rpc UpsertMessages(UpsertMessagesRequest) returns (UpsertMessagesResponse) {}
+  
+  // Delete messages
+  rpc DeleteMessages(DeleteMessagesRequest) returns (DeleteMessagesResponse) {}
+  
+  // Bust cache
+  rpc BustCache(BustCacheRequest) returns (BustCacheResponse) {}
+
+  // Find missing messages
+  rpc FindMissingMessages(FindMissingMessagesRequest) returns (FindMissingMessagesResponse) {}
+}
+
+// Common message types
+message Message {
+  string uuid = 1;
+  string code = 2;
+  string message = 3;
+  string module = 4;
+  string locale = 5;
+}
+
+message MessageIdentity {
+  string module = 1;
+  string locale = 2;
+  string code = 3;
+}
+
+// Request/Response types
+message SearchMessagesRequest {
+  string module = 1;
+  string locale = 2;
+  repeated string codes = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message SearchMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message CreateMessagesRequest {
+  repeated Message messages = 1;
+}
+
+message CreateMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message UpdateMessagesRequest {
+  repeated Message messages = 1;
+}
+
+message UpdateMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message UpsertMessagesRequest {
+  repeated Message messages = 1;
+}
+
+message UpsertMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message DeleteMessagesRequest {
+  repeated string uuids = 1;
+}
+
+message DeleteMessagesResponse {
+  bool success = 1;
+}
+
+// Request to clear the cache
+message BustCacheRequest {
+  // Optional: The module to clear the cache for.
+  string module = 1;
+  // Optional: The locale to clear the cache for.
+  string locale = 2;
+}
+
+// Response after clearing the cache
+message BustCacheResponse {
+  string message = 1;
+  bool success = 2;
+}
+
+// Request/Response for FindMissingMessages
+message FindMissingMessagesRequest {
+  // Optional: The module to find missing messages for.
+  // If not provided, finds for all modules.
+  string module = 1;
+}
+
+message FindMissingMessagesResponse {
+  map<string, LocaleToMissingCodes> missing_messages_by_module = 1;
+}
+
+message LocaleToMissingCodes {
+  map<string, MissingCodes> locales = 1;
+}
+
+message MissingCodes {
+  repeated string codes = 1;
+} 

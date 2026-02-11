@@ -1,0 +1,528 @@
+{
+	"info": {
+		"_postman_id": "ffde8aef-5c0d-4253-b5a6-74c5c9812ef3",
+		"name": "Boundary Go Service Copy 7",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28209461"
+	},
+	"item": [
+		{
+			"name": "Create Boundaries",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2Njg4ODcsImlhdCI6MTc1NzY2ODU4NywianRpIjoiMTlkMDM2YTQtOGFlOC00NGQ3LTk5ODgtNTA4Y2M4MjE1MTczIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiJkZjg3Y2RmZS03OTJkLTQ3MDktOTFhZS01NjlmMGUyMDc2ZDgiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.QddTp6RKW7c5mShdOfYlSXQBt2V4RwWhNMesNkGG1II465hTitceN2ZoMYf7HzVTyr8UipgQ-sp6oam73e6mowVpC7Pv3oCo5s-sASej-c_dtXgoH64zTPHr4WK4KYH36z7O0EqFwIDw6YTPs11Bdd0WSzMvBCngRVjAOoaS8cR_Ibhcudy-XWlwHhmpZKmSD2lidgwdQpS_6zLCivbSmaJLIm-XPlsU_Z3RpT4XnAUoTtNKlW-LfYd-aB19anJ3jVSgD56TTTjmXTcAu3qV3KjKQojJEFsDXiHT5dNAzdkbjOKeJcEr8euN5TyjeRb1Ndepi2IHjliimkg304g8hg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"boundary\": [\r\n        {\r\n\r\n            \"code\": \"STATE1\",\r\n            \"geometry\": {\r\n                            \"type\": \"Polygon\",\r\n                            \"coordinates\": [[[77.0, 28.5], [77.1, 28.5], [77.1, 28.6], [77.0, 28.6], [77.0, 28.5]]]\r\n                        },\r\n            \"additionalDetails\": {}\r\n        },\r\n        {\r\n\r\n            \"code\": \"STATE2\",\r\n            \"geometry\": {\r\n                \"type\":\"Point\",\r\n                \"coordinates\":[77.0, 28.5]\r\n            },\r\n            \"additionalDetails\": {}\r\n        },\r\n        {\r\n\r\n            \"code\": \"DISTRICT1\",\r\n            \"geometry\": {\r\n                            \"type\": \"Polygon\",\r\n                            \"coordinates\": [[[77.0, 28.5], [77.1, 28.5], [77.1, 28.6], [77.0, 28.6], [77.0, 28.5]]]\r\n                        },\r\n            \"additionalDetails\": {}\r\n        },\r\n        {\r\n\r\n            \"code\": \"DISTRICT2\",\r\n            \"geometry\": {\r\n                \"type\":\"Point\",\r\n                \"coordinates\":[77.0, 28.5]\r\n            },\r\n            \"additionalDetails\": {}\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Boundaries",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2NjkyMzAsImlhdCI6MTc1NzY2ODkzMCwianRpIjoiNzY1NzljMjgtYTI2MS00YmYwLTg5ZTgtMDcyOTI5ZjM3NGU3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiJjNjJjODAxMy02M2RjLTRiMWEtOWY3NC0zYTg1NmFlMGRlZjYiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.qvPu0EoAkj5bkkSa_vIKQ4o5bbWpc11_orAWLEjKzZygI8w4LsKHRjIjQI7QKiJI7LoXJC88HE9IOl7gHNou-F31YMFx9A12eYR1Hjx9tdB3M4rc9OqtPlbX64cBZxf5MNocCzQMJ1H026_yFBClCoH5RvpKQt-gEjzc9I-cpzrToifxXdjQEZFWwzoHbEueoCb5XbSq1UDHdS_v9B-S953be68vY7k1j-HA1AqqVFhcQN2jMZptB8Fy0nGvrgZVhxCTfCRfjjCxbhcfFX86YvSKRdAaBX3rx5pI0ZLsocpxps3CbSrEJGxzYBPOs08DhFg1AS_si4-nmBreDWv7ng",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1?codes=DISTRICT1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1"
+					],
+					"query": [
+						{
+							"key": "codes",
+							"value": "STATE1",
+							"disabled": true
+						},
+						{
+							"key": "codes",
+							"value": "STATE2",
+							"disabled": true
+						},
+						{
+							"key": "codes",
+							"value": "DISTRICT1"
+						},
+						{
+							"key": "codes",
+							"value": "DISTRICT2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Boundary",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2Njk3NDcsImlhdCI6MTc1NzY2OTQ0NywianRpIjoiYTZlODZiOTQtMTc3MS00ZWY1LTlkZjgtMWVkMTYwOGFjYjkxIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiJlODI2ZTZmNi0xZGM4LTQ5MWItOTQxMS04YWI4YTRjMGM1MTciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.VoGegtKBC1ppvedlsb_4ieMlEdPlQRmcmOGy376pTWhpbdb4yGsXu50VIWVj4_J7Q3_Ky1UT9el_G0GgGAgypBcyIw653NroNsKTk3pECoIKrNj2jsPkTBYBoXC2OlnZV9nLw0hPoWY5H9CxtRl6Qyc6zV6-yLyuQ7KPQ39qBYse1lGwR8Y1z3Av73asZLMfWtEgSU7B6SacB0nE0RA_9PIQRmkhJvEMRWllUbos1hE2l9OfD30GGcIqWR2zW129RfVamobaRRY1qZyE0EzD3pCbRWhFuaglAU_mEXw6l-spS6gB-ihS3kgJut07PKAI46rT9cQ9SHveczmhd_2Gyw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n            \"id\": \"1bad7ae1-d706-4dd5-92d3-1c3a4870a87a\",\r\n            \"code\": \"DISTRICT1\",\r\n            \"geometry\": {\r\n                \"type\": \"Polygon\",\r\n                \"coordinates\": [\r\n                    [\r\n                        [\r\n                            77.0,\r\n                            28.5\r\n                        ],\r\n                        [\r\n                            77.1,\r\n                            28.5\r\n                        ],\r\n                        [\r\n                            77.1,\r\n                            28.6\r\n                        ],\r\n                        [\r\n                            77.0,\r\n                            28.6\r\n                        ],\r\n                        [\r\n                            77.0,\r\n                            28.5\r\n                        ]\r\n                    ]\r\n                ]\r\n            },\r\n            \"additionalDetails\": {\r\n                \"name\":\"district\"\r\n            },\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"test-user-uuid\",\r\n                \"lastModifiedBy\": \"test-user-uuid\",\r\n                \"createdTime\": 1758866762600,\r\n                \"lastModifiedTime\": 1758866762600\r\n            }\r\n        }"
+				},
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/1bad7ae1-d706-4dd5-92d3-1c3a4870a87a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"1bad7ae1-d706-4dd5-92d3-1c3a4870a87a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Boundary Hierarchy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2Njk3NDcsImlhdCI6MTc1NzY2OTQ0NywianRpIjoiYTZlODZiOTQtMTc3MS00ZWY1LTlkZjgtMWVkMTYwOGFjYjkxIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiJlODI2ZTZmNi0xZGM4LTQ5MWItOTQxMS04YWI4YTRjMGM1MTciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.VoGegtKBC1ppvedlsb_4ieMlEdPlQRmcmOGy376pTWhpbdb4yGsXu50VIWVj4_J7Q3_Ky1UT9el_G0GgGAgypBcyIw653NroNsKTk3pECoIKrNj2jsPkTBYBoXC2OlnZV9nLw0hPoWY5H9CxtRl6Qyc6zV6-yLyuQ7KPQ39qBYse1lGwR8Y1z3Av73asZLMfWtEgSU7B6SacB0nE0RA_9PIQRmkhJvEMRWllUbos1hE2l9OfD30GGcIqWR2zW129RfVamobaRRY1qZyE0EzD3pCbRWhFuaglAU_mEXw6l-spS6gB-ihS3kgJut07PKAI46rT9cQ9SHveczmhd_2Gyw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"boundaryHierarchy\": {\r\n        \"hierarchyType\": \"state-district-hierarchy\",\r\n        \"boundaryHierarchy\": [\r\n            {\r\n                \"boundaryType\": \"state\",\r\n                \"parentBoundaryType\": null,\r\n                \"active\": true\r\n            },\r\n            {\r\n                \"boundaryType\": \"district\",\r\n                \"parentBoundaryType\": \"state\",\r\n                \"active\": true\r\n            }\r\n        ]\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/boundary-hierarchy-definition",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"boundary-hierarchy-definition"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Boundary Hierarchies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2Njk3NDcsImlhdCI6MTc1NzY2OTQ0NywianRpIjoiYTZlODZiOTQtMTc3MS00ZWY1LTlkZjgtMWVkMTYwOGFjYjkxIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiJlODI2ZTZmNi0xZGM4LTQ5MWItOTQxMS04YWI4YTRjMGM1MTciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.VoGegtKBC1ppvedlsb_4ieMlEdPlQRmcmOGy376pTWhpbdb4yGsXu50VIWVj4_J7Q3_Ky1UT9el_G0GgGAgypBcyIw653NroNsKTk3pECoIKrNj2jsPkTBYBoXC2OlnZV9nLw0hPoWY5H9CxtRl6Qyc6zV6-yLyuQ7KPQ39qBYse1lGwR8Y1z3Av73asZLMfWtEgSU7B6SacB0nE0RA_9PIQRmkhJvEMRWllUbos1hE2l9OfD30GGcIqWR2zW129RfVamobaRRY1qZyE0EzD3pCbRWhFuaglAU_mEXw6l-spS6gB-ihS3kgJut07PKAI46rT9cQ9SHveczmhd_2Gyw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/boundary-hierarchy-definition?hierarchyType=state-district-hierarchy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"boundary-hierarchy-definition"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "pg",
+							"disabled": true
+						},
+						{
+							"key": "hierarchyType",
+							"value": "state-district-hierarchy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Boundary Relationship",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2NzExMTksImlhdCI6MTc1NzY3MDgxOSwianRpIjoiMzE0ZjlhZjAtYTc1ZS00Mzc0LWJhY2YtODIyNTg1M2Y2MGE3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiJjMjAxOGE2OC1lZGUxLTQ2MWEtYTYyNi04ZDI4YTM2NmQyM2YiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.MxFfK-YeBjv5lNKuEgNUBA1hSVA5MSEmO7oLGat7LsjTmvPJzH3BDTlx7AQFjENwn-DoeLiBpcHd4J8d7Mq0FCqqnLeLK77L2CzQo6zJ4Dc1z_9Gn0Se7D7V9k7A4JMRjj82l1d6PSUJjqKu6ANDL4sSbvHQKlG7AKzgKFKVheHhcyIocUsvNzZa_b9heXxJ3KPJ6RX34OZEHoAAmrFzs4rUDg--iWn28nELpVZbefVqV4Oev2sol1s7RQzFoLnVbDqpwMRPQDup7T_bgrI_qWhJYFvHGqjG2Ly9Fl4CoSfTzGEKuOTaXxriXPPCM6QHxEeiRvQBrQiegDqgg_z36w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"boundaryRelationship\": {\n        \"tenantId\":\"pg\",\n        \"code\": \"STATE1\",\n        \"hierarchyType\": \"state-district-hierarchy\",\n        \"boundaryType\": \"state\",\n        \"parent\": null\n    }\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/boundary-relationships",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"boundary-relationships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Boundary Relationships",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has required fields in responseInfo\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.responseInfo).to.exist;\r",
+							"    pm.expect(responseData.responseInfo).to.have.all.keys('apiId', 'ver', 'ts', 'status');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"The tenantBoundary array is present and contains at least one element\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.tenantBoundary).to.exist.and.to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response contains required properties\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.responseInfo).to.exist;\r",
+							"    pm.expect(responseData.tenantBoundary).to.be.an('array').that.is.not.empty;\r",
+							"\r",
+							"    responseData.tenantBoundary.forEach(function(tenant) {\r",
+							"        pm.expect(tenant).to.have.property('tenantId').that.is.a('string');\r",
+							"        pm.expect(tenant).to.have.property('hierarchyType').that.is.a('string');\r",
+							"        pm.expect(tenant.boundary).to.be.an('array').that.is.not.empty;\r",
+							"\r",
+							"        tenant.boundary.forEach(function(boundary) {\r",
+							"            pm.expect(boundary).to.have.all.keys('id', 'code', 'boundaryType', 'auditDetails');\r",
+							"            pm.expect(boundary.auditDetails).to.have.all.keys('createdBy', 'lastModifiedBy', 'createdTime', 'lastModifiedTime');\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2NzEyOTgsImlhdCI6MTc1NzY3MDk5OCwianRpIjoiY2YzZDdjOTAtYzdkYy00NGEwLTk2NGEtOThmZmVhM2FhMzliIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiIwMjBkMjE1YS1mZmRmLTQ5YmUtYmFjMS01YWQ5ODBjNDc2MDkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.h_A4NpNYhqp1atJcIkYqKker46URNBsiTnO58PItdMdxqzHVt3lCxQO6tF0QnZ9hy8M6aaj09sLqI7irCw6tPg50nm1jOav0oLa5j1LzeuDljbrHWBwZ4LlGkp78e2LUGcWOVA3N9x_s6CErwrerExKdJz1c9ZkgybEkLweN_LeAiv5rbX9uz2XtN5vFTmOnICMQ_M7bx717gw2s5_5sT6V3FJe4hsJ1-RZpIeEsEQIUDTTvcsDMtpzq85JMuUqDvtclNFZmVLr8zR5DOY6PDYRIbD2n0KA3lCmm-i957Job0ArRTK6wiNjd7YnnPql1xzuBwOYn8ltBfH1j0ai3OA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/boundary-relationships?hierarchyType=state-district-hierarchy&boundaryType=state&includeChildren=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"boundary-relationships"
+					],
+					"query": [
+						{
+							"key": "hierarchyType",
+							"value": "state-district-hierarchy"
+						},
+						{
+							"key": "boundaryType",
+							"value": "state"
+						},
+						{
+							"key": "includeChildren",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Boundary Relationship",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyQVFDZmc5YUNscTY3OEV1VlBBMFBDRTFGZHowdHZwNTlMdTdaZ2I1YnBBIn0.eyJleHAiOjE3NTc2NzAwNDcsImlhdCI6MTc1NzY2OTc0NywianRpIjoiY2QzYTk5NjctZDdkMi00NzU1LWJmODctMDRkNWIxYTQ3MTVmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAva2V5Y2xvYWstdGVzdC9yZWFsbXMvS09OR05FVzEiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiZGQxMjM4YzctMjlkYy00ZTA3LTkyZDktMTJiNDRjOTA0MTY1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0aC1zZXJ2ZXIiLCJzaWQiOiI5OGZmNjgxZC03MTFmLTRjZDktODAxOC04MGIyMWFiM2M0NDQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWtvbmduZXcxIiwiU1VQRVJVU0VSIiwib2ZmbGluZV9hY2Nlc3MiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsInZpZXctcmVhbG0iLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImtvbmduZXcxIFN1cGVydXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3RAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoia29uZ25ldzEiLCJmYW1pbHlfbmFtZSI6IlN1cGVydXNlciIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.nWEuGbw0Tyb7mZXuodTpljyO9TvyEqkiG2qay2uMXGO73vSXlmr1AHuf-FL1n6H6K0wAVmYd8m4eB45iVonuVIPqj6NfV-2KpCFXya4nPfs5GAQf_6kdKjy6YvMcrUwo4Od2veu-HM0h4tJgzz1Kn2LbMvwmlaLoIXVuHW-2079IVaxDl4e3AEmik7Sqzd1U6coRBeYckO79N0nxK0rV3Ti-MB7P3We0sYkFQjeT_t2lbe8yZOAqC9lUytHtlO7TqeT0TUDCEzMKidIyHeN7XeVP0RE-4SE8dDncts64EQff1STQGDx5iQ4s71kC27ueoqq0i-euqcGdFWk5OlcIFg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n            \"id\": \"6dca7bba-378d-41f7-abb6-c4be161be67e\",\r\n            \"tenantId\": \"pg\",\r\n            \"code\": \"STATE1\",\r\n            \"hierarchyType\": \"state-district-hierarchy\",\r\n            \"boundaryType\": \"state\",\r\n            \"parent\": \"\",\r\n            \"ancestralMaterializedPath\": \"STATE1\",\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"test-user-uuid\",\r\n                \"lastModifiedBy\": \"test-user-uuid\",\r\n                \"createdTime\": 1758868180588,\r\n                \"lastModifiedTime\": 1758868180588\r\n            }\r\n        }"
+				},
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/boundary-relationships/6dca7bba-378d-41f7-abb6-c4be161be67e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"boundary-relationships",
+						"6dca7bba-378d-41f7-abb6-c4be161be67e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Boundaries from Shapefile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Tenant-ID",
+						"value": "pg"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "test-user-uuid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tenantId\": \"pg\",\r\n    \"fileStoreIds\": [\r\n        \"59e61130-fddf-4fc0-8373-841be3ed1ae5\",\r\n        \"4b95642b-d14f-49ad-bc1b-de9ba35b29fe\",\r\n        \"a69f6c45-d0da-4ca0-8da9-c8cd8bc87dfe\",\r\n        \"862b2ef1-0820-4ad6-bbd1-59fe75824e7f\"\r\n    ],\r\n    \"uniqueCodeField\": \"<your-unique-code-field>\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8093/boundary/v1/shapefile/boundary/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"boundary",
+						"v1",
+						"shapefile",
+						"boundary",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

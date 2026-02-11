@@ -1,0 +1,424 @@
+{
+  "collection": {
+    "info": {
+      "_postman_id": "50b53648-7540-4ab7-ba45-45cbc8aaa044",
+      "name": "Localization Copy",
+      "description": "Simple collection for Localization Service REST and gRPC APIs",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "updatedAt": "2025-09-26T10:32:38.000Z",
+      "createdAt": "2025-09-26T10:27:50.000Z",
+      "lastUpdatedBy": "31023861",
+      "uid": "31023861-50b53648-7540-4ab7-ba45-45cbc8aaa044"
+    },
+    "item": [
+      {
+        "name": "REST APIs",
+        "item": [
+          {
+            "name": "Search Messages",
+            "id": "8e43af1b-b3f3-459d-85fa-7585027da9da",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/messages?module=common&locale=en&codes=welcome.msg",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "messages"
+                ],
+                "query": [
+                  {
+                    "key": "module",
+                    "value": "common",
+                    "description": "Filter by module (optional)"
+                  },
+                  {
+                    "key": "locale",
+                    "value": "en",
+                    "description": "Filter by locale (optional)"
+                  },
+                  {
+                    "key": "limit",
+                    "value": "20",
+                    "description": "Pagination limit (optional)",
+                    "disabled": true
+                  },
+                  {
+                    "key": "offset",
+                    "value": "0",
+                    "description": "Pagination offset (optional)",
+                    "disabled": true
+                  },
+                  {
+                    "key": "codes",
+                    "value": "welcome.msg"
+                  }
+                ]
+              },
+              "description": "Search for localization messages with optional filters"
+            },
+            "response": [],
+            "uid": "31023861-8e43af1b-b3f3-459d-85fa-7585027da9da"
+          },
+          {
+            "name": "Create Messages",
+            "id": "5751cea9-6deb-432b-a0b6-b450dbe87616",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                },
+                {
+                  "key": "X-User-ID",
+                  "value": "test-user",
+                  "description": "User creating the messages"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"messages\": [\n        {\n            \"code\": \"welcome.msg\",\n            \"message\": \"Welcome to our application.\",\n            \"module\": \"common\",\n            \"locale\": \"en\"\n        },\n        {\n            \"code\": \"goodbye.msg\",\n            \"message\": \"Thank you for using our app.\",\n            \"module\": \"common\",\n            \"locale\": \"en\"\n        }\n \n    ]\n}"
+              },
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/messages",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "messages"
+                ]
+              },
+              "description": "Create new localization messages"
+            },
+            "response": [],
+            "uid": "31023861-5751cea9-6deb-432b-a0b6-b450dbe87616"
+          },
+          {
+            "name": "Update Messages",
+            "id": "2c0c12be-884f-458e-97d3-c417181da6d7",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                },
+                {
+                  "key": "X-User-ID",
+                  "value": "test-user",
+                  "description": "User updating the messages"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"messages\": [\n        {\n            \"uuid\": \"63368dfd-6579-4357-b51a-da5d29766078\",\n            \"message\": \"Updated message content .\"\n        }\n    ]\n}"
+              },
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/messages",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "messages"
+                ]
+              },
+              "description": "Update existing messages by UUID"
+            },
+            "response": [],
+            "uid": "31023861-2c0c12be-884f-458e-97d3-c417181da6d7"
+          },
+          {
+            "name": "Upsert Messages",
+            "id": "19c1f445-f79b-43aa-aee0-8240119f025f",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                },
+                {
+                  "key": "X-User-ID",
+                  "value": "test-user",
+                  "description": "User upserting the messages"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"messages\": [\n        //it will create new message\n        {\n            \"code\": \"new.code\",\n            \"message\": \"New message via upsert daf\",\n            \"module\": \"common\",\n            \"locale\": \"en\"\n        },\n\n        //it will update existing message\n        {\n            \"uuid\": \"63368dfd-6579-4357-b51a-da5d29766078\",\n            \"code\": \"goodbye.msg\",\n            \"message\": \"Thank you for using our app. \",\n            \"module\": \"common\",\n            \"locale\": \"en\"\n        }\n    ]\n}"
+              },
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/messages/_upsert",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "messages",
+                  "_upsert"
+                ]
+              },
+              "description": "Create or update messages (include UUID to update, omit UUID to create)"
+            },
+            "response": [],
+            "uid": "31023861-19c1f445-f79b-43aa-aee0-8240119f025f"
+          },
+          {
+            "name": "Delete Messages",
+            "id": "03205ac2-1ad8-46f4-b528-f11edb48956b",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                },
+                {
+                  "key": "X-User-ID",
+                  "value": "test-user",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/messages?uuid=63368dfd-6579-4357-b51a-da5d29766078",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "messages"
+                ],
+                "query": [
+                  {
+                    "key": "uuids",
+                    "value": "{{message_uuid2}}",
+                    "description": "Additional UUID for bulk delete",
+                    "disabled": true
+                  },
+                  {
+                    "key": "uuid",
+                    "value": "63368dfd-6579-4357-b51a-da5d29766078"
+                  }
+                ]
+              },
+              "description": "Delete messages by UUID (use 'uuid' for single, 'uuids' for multiple)"
+            },
+            "response": [],
+            "uid": "31023861-03205ac2-1ad8-46f4-b528-f11edb48956b"
+          },
+          {
+            "name": "Find Missing Messages",
+            "id": "ad4e85c2-3cde-498c-8703-5e970c9a0d9d",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                },
+                {
+                  "key": "X-User-ID",
+                  "value": "test-user",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/messages/_missing",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "messages",
+                  "_missing"
+                ],
+                "query": [
+                  {
+                    "key": "module",
+                    "value": "{{module}}",
+                    "description": "Filter by specific module (optional)",
+                    "disabled": true
+                  }
+                ]
+              },
+              "description": "Find missing translations"
+            },
+            "response": [],
+            "uid": "31023861-ad4e85c2-3cde-498c-8703-5e970c9a0d9d"
+          },
+          {
+            "name": "Burst Cache",
+            "id": "8c40b092-6b0d-4fa7-ba76-53d4ac582528",
+            "protocolProfileBehavior": {
+              "disableBodyPruning": true
+            },
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "X-Tenant-ID",
+                  "value": "pg",
+                  "description": "Required tenant identifier"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8088/localization/v1/cache/_bust",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8088",
+                "path": [
+                  "localization",
+                  "v1",
+                  "cache",
+                  "_bust"
+                ],
+                "query": [
+                  {
+                    "key": "module",
+                    "value": "common",
+                    "description": "Module to clear cache for (optional)",
+                    "disabled": true
+                  },
+                  {
+                    "key": "locale",
+                    "value": "en",
+                    "description": "Locale to clear cache for (optional)",
+                    "disabled": true
+                  }
+                ]
+              },
+              "description": "Clear cache for tenant"
+            },
+            "response": [],
+            "uid": "31023861-8c40b092-6b0d-4fa7-ba76-53d4ac582528"
+          }
+        ],
+        "id": "e5d77c50-3068-45c2-8d77-890d919f26f2",
+        "uid": "31023861-e5d77c50-3068-45c2-8d77-890d919f26f2"
+      }
+    ],
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8088",
+        "type": "string",
+        "description": "Base URL for REST API"
+      },
+      {
+        "key": "grpc_url",
+        "value": "http://localhost:8089",
+        "type": "string",
+        "description": "Base URL for gRPC API"
+      },
+      {
+        "key": "tenant_id",
+        "value": "pg",
+        "type": "string",
+        "description": "Tenant identifier"
+      },
+      {
+        "key": "user_id",
+        "value": "test-user",
+        "type": "string",
+        "description": "User identifier"
+      },
+      {
+        "key": "module",
+        "value": "common",
+        "type": "string",
+        "description": "Module name"
+      },
+      {
+        "key": "locale",
+        "value": "en",
+        "type": "string",
+        "description": "Locale identifier"
+      },
+      {
+        "key": "codes",
+        "value": "welcome.msg",
+        "type": "string",
+        "description": "Message code"
+      },
+      {
+        "key": "message_uuid",
+        "value": "35f792e5-2983-4d94-9d14-8bdec6006e58",
+        "type": "string",
+        "description": "Example UUID for operations"
+      },
+      {
+        "key": "message_uuid2",
+        "value": "ac40f87b-8feb-43a9-81d3-df242b68e59e",
+        "type": "string",
+        "description": "Second UUID for bulk operations"
+      }
+    ]
+  }
+}
