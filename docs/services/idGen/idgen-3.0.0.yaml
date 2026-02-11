@@ -99,11 +99,23 @@ paths:
                   createdBy: "550e8400-e29b-41d4-a716-446655440000"
                   createdTime: 1704067200000
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
-          $ref: '#/components/responses/Conflict'
+          description: Conflict (duplicate code within tenant)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     
     put:
       tags:
@@ -143,11 +155,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/IDGenTemplateResponse'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     
     get:
       tags:
@@ -212,9 +236,17 @@ paths:
                     createdBy: "550e8400-e29b-41d4-a716-446655440000"
                     createdTime: 1704067200000
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     
     delete:
       tags:
@@ -249,11 +281,23 @@ paths:
         '200':
           description: Template deleted successfully
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   
   /v1/generate:
     post:
@@ -309,19 +353,17 @@ paths:
                     version: "v1"
                     id: "PG-20250703-0001-A9"
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           description: Generation failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                code: "GENERATION_FAILED"
-                message: "Failed to generate ID"
-                description: "Template not found or invalid configuration"
-                params:
-                  - "Template 'invalid-template' not found for tenant 'pg'"
 
 components:
   securitySchemes:
@@ -496,49 +538,3 @@ components:
     Error:
       $ref: 'https://raw.githubusercontent.com/digitnxt/digit3/refs/heads/master/docs/services/common/Common-3.0.0.yaml#/components/schemas/Error'
   
-  responses:
-    BadRequest:
-      description: Bad request - Invalid input parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: "BAD_REQUEST"
-            message: "Invalid request body"
-            description: "Request must include tenantId in headers"
-    
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: "NOT_FOUND"
-            message: "Template not found"
-            description: "Template with code 'invalid-template' not found for tenant 'pg'"
-    
-    Conflict:
-      description: Conflict - Resource already exists
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: "CONFLICT"
-            message: "Template already exists"
-            description: "Template with code 'receipt-id' already exists for tenant 'pg'"
-    
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: "INTERNAL_SERVER_ERROR"
-            message: "Failed to process request"
-            description: "Database connection error"
-
-
