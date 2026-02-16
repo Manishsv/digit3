@@ -48,7 +48,17 @@ RegistrySchemaCode=pgr2 \
 ````
 Your pom.xml, application.properties, models, controller file and config files are all generated. 
 
-NOTE: Change the flags idgenTemplateCode, WorkflowProcessCode, RegistrySchemaCode to what was configured in CLI accordingly.
+NOTE1: Change the flags idgenTemplateCode, WorkflowProcessCode, RegistrySchemaCode to what was configured in CLI accordingly.
+NOTE2: Make sure the base URLS are as below:
+
+```bash
+digit.services.boundary.base-url=http://localhost:8095
+digit.services.workflow.base-url=http://localhost:8095
+digit.services.idgen.base-url=http://localhost:8095
+digit.services.notification.base-url=http://localhost:8095
+digit.services.filestore.base-url=http://localhost:8095
+digit.services.registry.base-url=http://localhost:8095
+```
 
 ### 2. Import in IDE.
 
