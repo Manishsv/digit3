@@ -5,9 +5,9 @@ This guide provides detailed steps for developers to create a new microservice o
 **Steps to create a microservice:**
 
 * Set up your development environment
-* Configure DIGIT services using [DIGIT CLI](https://github.com/digitnxt/digit3/tree/de5d714c59919e61e68a83072badde6f4b2a0ae4/tools/digit-cli)
-* Develop the registries, services, and APIs for the module that were described in the [Design Guide](https://docs.digit.org/platform/guides/design-guide)
-* Integrate with an existing DIGIT environment and re-use a lot of the common services using [DIGIT Client Library](https://github.com/digitnxt/digit3/tree/de5d714c59919e61e68a83072badde6f4b2a0ae4/src/libraries/digit-client)
+* Configure DIGIT services using [DIGIT CLI](https://github.com/digitnxt/digit3/tree/develop/tools/digit-cli)
+* Develop the registries, services, and APIs for the module that were described in the Design Guide.
+* Integrate with an existing DIGIT environment and re-use a lot of the common services using [DIGIT Client Library](https://github.com/digitnxt/digit3/tree/develop/src/libraries/digit-client)
 * Test the new module
 
 The guide is divided into multiple sections for ease of use. Click on the section cards below to follow the development steps.
