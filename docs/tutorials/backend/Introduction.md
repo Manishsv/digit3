@@ -58,4 +58,4 @@ Please note that step 2 can be done via LLM are any other way as per your conven
 </table>
 
 
-Access the sample PGR module [here](https://github.com/digitnxt/digit3/tree/11b02a69a501282acceea9c93172ff584025c12a/pgrown3.0_copy). Download and run this in the local environment.
+Access the sample PGR module [here](https://github.com/digitnxt/digit3/tree/pgr-demo-1/pgr). Download and run this in the local environment.
