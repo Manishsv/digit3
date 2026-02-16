@@ -2,7 +2,7 @@
 
 To get started with our module, we need to interact with DIGIT platform services to create and configure the account, users, roles and all the DIGIT service templates needed for this PGR module. Luckily this task is made super simple with just a few lines of code using DIGIT CLI!
 
-DIGIT CLI is a comprehensive command-line interface for interacting with DIGIT platform services. This CLI tool provides commands for account management, user creation, role assignment, workflow management, template creation, MDMS operations, and more. To learn more about DIGIT CLI, please click [here](https://github.com/digitnxt/digit3/tree/654c85117283c46e9112f92616221d67ede66f69/tools/digit-cli)
+DIGIT CLI is a comprehensive command-line interface for interacting with DIGIT platform services. This CLI tool provides commands for account management, user creation, role assignment, workflow management, template creation, MDMS operations, and more.
 
 Follow along with [this video](https://github.com/digitnxt/digit3/blob/1eb4ef483a7e95577c32d0bbf27df158d50fe9e5/docs/tutorials/backend/Configure%20w%20DIGIT%20CLI.mp4):
 
