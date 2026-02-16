@@ -48,6 +48,8 @@ RegistrySchemaCode=pgr2 \
 ````
 Your pom.xml, application.properties, models, controller file and config files are all generated. 
 
+NOTE: Change the flags idgenTemplateCode, WorkflowProcessCode, RegistrySchemaCode to what was configured in CLI accordingly.
+
 ### 2. Import in IDE.
 
 Now you have all the generated files you need! Open the generated-pgr folder in the IDE of your choice. Make sure it is using this folder structure:
