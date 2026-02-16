@@ -39,7 +39,9 @@ Customize the account’s experience and settings after sign-up, by setting up t
 
 ```bash
 digit config set --server http://localhost:8095 --account AMARAVATI --client-id auth-server --client-secret changeme --username test@example.com --password default
-```  
+```
+
+NOTE: In case of token expiry run the above command again.
 
 ## 3. IDGEN CONFIGURATION: Configure the template we require for ID generation in the PGR module:
 
