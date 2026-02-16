@@ -91,7 +91,7 @@ digit create-boundaries --file <BOUNDARY_FILE_PATH>
 
 ## 7. REGISTRY SCHEMA: 
 
-Here we are using the file 'pgr2-registry-schema.yaml' which has all the process, states and actions we require. You can download this file [here](https://github.com/digitnxt/digit3/blob/master/docs/tutorials/backend/examples/pgr2-registry-schema.yaml) and copy the path.
+Here we are using the file 'pgr2-registry-schema.yaml' which has all the process, states and actions we require. You can download this file [here](https://github.com/digitnxt/digit3/blob/master/docs/tutorials/backend/sample-config/pgr2-registry-schema.yaml) and copy the path.
 
 ```bash
 digit create-registry-schema --file <REGISTRY_FILE_PATH>
