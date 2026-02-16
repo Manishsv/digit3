@@ -1,6 +1,6 @@
 # Backend Developer Guide
 
-This guide provides detailed steps for developers to create a new microservice on top of DIGIT 3.0. At the end of this guide, you will be able to run the [PGR module](https://github.com/digitnxt/digit3/tree/11b02a69a501282acceea9c93172ff584025c12a/pgrown3.0_copy) provided and test it out locally.
+This guide provides detailed steps for developers to create a new microservice on top of DIGIT 3.0. At the end of this guide, you will be able to run the PGR module provided and test it out locally.
 
 **Steps to create a microservice:**
 
