@@ -23,7 +23,7 @@ curl --location 'http://localhost:8095/keycloak/realms/AMARAVATI/protocol/openid
 --data-urlencode 'password=mypassword'
 ```
 NOTE:
-To upload your file use the below command (replace with your file in headers):
+To upload your file use the below command (replace with your file):
 ```bash
 curl --location 'http://localhost:8102/filestore/v1/files/upload' \
 --header 'Content-Type: multipart/mixed' \
