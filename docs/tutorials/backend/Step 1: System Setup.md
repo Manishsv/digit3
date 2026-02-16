@@ -1,6 +1,6 @@
 # Development Environment Setup
 
-Find the Open API specifications defined for this guide [here](https://github.com/digitnxt/digit3/blob/77dc0285b094a19966b0f3e4edb8480f96571a06/PGR-specs.yaml)
+Find the Open API specifications defined for this guide [here](https://github.com/digitnxt/digit3/blob/openapigenerator-custom-file/gen-DIGIT-stub/pgr.yaml)
 
 ## Overview
 
