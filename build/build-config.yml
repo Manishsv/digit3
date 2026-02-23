@@ -125,12 +125,12 @@ config:
       - work-dir: "code/services/clamav-wrapper"
         image-name: "clamav-wrapper"
         dockerfile: "build/go/Dockerfile"
-  - name: "builds/digit3/code/services/workflow"
+  - name: "builds/digit3/src/services/workflow"
     build:
-      - work-dir: "code/services/workflow"
+      - work-dir: "src/services/workflow"
         image-name: "workflow"
         dockerfile: "build/go/Dockerfile"
-      - work-dir: "code/services/workflow/db"
+      - work-dir: "src/services/workflow/db"
         image-name: "workflow-db"
 
   - name: "builds/digit3/code/services/account"
