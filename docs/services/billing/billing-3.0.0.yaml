@@ -1565,7 +1565,8 @@ components:
             enum: [CASH, CHEQUE, DD, POSTAL_ORDER, OFFLINE_NEFT, OFFLINE_RTGS, ONLINE, CARD,ONLINE_NEFT, ONLINE_RTGS, UPI, NETBANKING, WALLET]
         billExpiryDays:
           type: integer
-          description: Days after which an issued bill expires (-1 = never)
+          minimum: 0
+          description: Days after which an issued bill expires (0 = never)
           example: 30
         partialPaymentAllowed:
           type: boolean
