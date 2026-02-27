@@ -1618,6 +1618,7 @@ components:
         - isActive
         - currency
         - effectiveFrom
+        - billExpiryDays
       properties:
         code:
           type: string
