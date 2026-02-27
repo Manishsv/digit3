@@ -1063,6 +1063,58 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
 
+  /bills/generate:
+    post:
+      summary: Generate a bill
+      operationId: generateBill
+      tags: [Bill]
+      parameters:
+        - $ref: '#/components/parameters/RequestIdHeader'
+        - $ref: '#/components/parameters/CorrelationIdHeader'
+        - $ref: '#/components/parameters/UserAgentHeader'
+        - $ref: '#/components/parameters/TenantIdHeader'
+        - $ref: '#/components/parameters/ForwardedForHeader'
+        - $ref: '#/components/parameters/ClientId'
+        - $ref: '#/components/parameters/ClientSecret'
+        - $ref: '#/components/parameters/TimeStamp'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateBillCriteria'
+      responses:
+        '201':
+          description: Bill generated
+          headers:
+            X-Response-Time: { $ref: '#/components/headers/X-Response-Time' }
+            X-Response-Timestamp: { $ref: '#/components/headers/X-Response-Timestamp' }
+            X-Request-ID: { $ref: '#/components/headers/X-Request-ID' }
+            X-Correlation-ID: { $ref: '#/components/headers/X-Correlation-ID' }
+            X-Tenant-ID: { $ref: '#/components/headers/X-Tenant-ID' }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          description: Validation error (unknown head, invalid amounts, bad status transition, etc.)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: Conflict (duplicate create without Idempotency-Key; overlapping/duplicate bills as per policy)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
   /bills:
     get:
       summary: Search bills by filters
@@ -1124,7 +1176,7 @@ paths:
           description: Offset for pagination
       responses:
         '200':
-          description: List of Demands
+          description: List of Bills
           headers:
             X-Response-Time: { $ref: '#/components/headers/X-Response-Time' }
             X-Response-Timestamp: { $ref: '#/components/headers/X-Response-Timestamp' }
@@ -1149,57 +1201,7 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
 
-  /bills/generate:
-    post:
-      summary: Generate a bill
-      operationId: generateBill
-      tags: [Bill]
-      parameters:
-        - $ref: '#/components/parameters/RequestIdHeader'
-        - $ref: '#/components/parameters/CorrelationIdHeader'
-        - $ref: '#/components/parameters/UserAgentHeader'
-        - $ref: '#/components/parameters/TenantIdHeader'
-        - $ref: '#/components/parameters/ForwardedForHeader'
-        - $ref: '#/components/parameters/ClientId'
-        - $ref: '#/components/parameters/ClientSecret'
-        - $ref: '#/components/parameters/TimeStamp'
-        - $ref: '#/components/parameters/IdempotencyKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GenerateBillCriteria'
-      responses:
-        '201':
-          description: Bills generated
-          headers:
-            X-Response-Time: { $ref: '#/components/headers/X-Response-Time' }
-            X-Response-Timestamp: { $ref: '#/components/headers/X-Response-Timestamp' }
-            X-Request-ID: { $ref: '#/components/headers/X-Request-ID' }
-            X-Correlation-ID: { $ref: '#/components/headers/X-Correlation-ID' }
-            X-Tenant-ID: { $ref: '#/components/headers/X-Tenant-ID' }
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Bill'
-        '400':
-          description: Validation error (unknown head, invalid amounts, bad status transition, etc.)
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/Error' }
-        '409':
-          description: Conflict (duplicate create without Idempotency-Key; overlapping/duplicate bills as per policy)
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+
       
   /bills/cancel:
     post:
@@ -1224,7 +1226,7 @@ paths:
               $ref: '#/components/schemas/UpdateBillStatus'
       responses:
         '201':
-          description: Bills canceled
+          description: Bill canceled
           headers:
             X-Response-Time: { $ref: '#/components/headers/X-Response-Time' }
             X-Response-Timestamp: { $ref: '#/components/headers/X-Response-Timestamp' }
