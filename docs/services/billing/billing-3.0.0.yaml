@@ -1557,7 +1557,7 @@ components:
         collectionMode:
           type: string
           description: Allowed collection channel(s)
-          enum: [ONLINE, OFFLINE, BOTH]
+          enum: [ONLINE, OFFLINE, COUNTER, FIELD, BOTH]
           default: BOTH
         allowedPaymentModes:
           type: array
@@ -1638,7 +1638,7 @@ components:
         collectionMode:
           type: string
           description: Allowed collection channel(s)
-          enum: [ONLINE, OFFLINE, BOTH]
+          enum: [ONLINE, OFFLINE, COUNTER, FIELD, BOTH]
           default: BOTH
         allowedPaymentModes:
           type: array
@@ -1702,7 +1702,7 @@ components:
         collectionMode:
           type: string
           description: Allowed collection channel(s)
-          enum: [ONLINE, OFFLINE, BOTH]
+          enum: [ONLINE, OFFLINE, COUNTER, FIELD, BOTH]
           default: BOTH
         allowedPaymentModes:
           type: array
@@ -1758,7 +1758,7 @@ components:
           maxLength: 128
         collectionMode:
           type: string
-          enum: [ONLINE, OFFLINE, BOTH]
+          enum: [ONLINE, OFFLINE, COUNTER, FIELD, BOTH]
         allowedPaymentModes:
           type: array
           items:
