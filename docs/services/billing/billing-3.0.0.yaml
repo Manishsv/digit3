@@ -2562,6 +2562,10 @@ components:
             Code of the owning Business Service (e.g., PT, TL, WS). Must reference an **active** service.
             Pattern: uppercase letters, digits, underscore; must start with a letter.
           example: PT
+        status:
+          type: string
+          enum: [ACCEPTED, IN_PROGESS, COMPLETED, PARTIALLY_COMPLETED, FAILED]
+          default: ACCEPTED
         totalJobsCreated:
           type: integer
           format: int64
