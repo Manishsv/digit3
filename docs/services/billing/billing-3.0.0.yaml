@@ -1255,6 +1255,53 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
 
+  /bills/bulk-generate:
+    post:
+      summary: Generate bills in bulk
+      operationId: bulkGenerateBill
+      tags: [Bill]
+      parameters:
+        - $ref: '#/components/parameters/RequestIdHeader'
+        - $ref: '#/components/parameters/CorrelationIdHeader'
+        - $ref: '#/components/parameters/UserAgentHeader'
+        - $ref: '#/components/parameters/TenantIdHeader'
+        - $ref: '#/components/parameters/ForwardedForHeader'
+        - $ref: '#/components/parameters/ClientId'
+        - $ref: '#/components/parameters/ClientSecret'
+        - $ref: '#/components/parameters/TimeStamp'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkBillGenerator'
+      responses:
+        '202':
+          description: Bulk bill generation request accepted
+          headers:
+            X-Response-Time: { $ref: '#/components/headers/X-Response-Time' }
+            X-Response-Timestamp: { $ref: '#/components/headers/X-Response-Timestamp' }
+            X-Request-ID: { $ref: '#/components/headers/X-Request-ID' }
+            X-Correlation-ID: { $ref: '#/components/headers/X-Correlation-ID' }
+            X-Tenant-ID: { $ref: '#/components/headers/X-Tenant-ID' }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkBillResponse'
+        '400':
+          description: Validation error (unknown head, invalid amounts, bad status transition, etc.)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
   /payments:
     post:
       summary: Create a new payment
@@ -2481,6 +2528,52 @@ components:
           type: object
           additionalProperties: true
           description: Optional calculator trace (e.g., `rate`, `basis`, `units`, `area`, `multiplier`, `slabId`) to support audits.
+
+    BulkBillGenerator:
+      type: object
+      description: Represents a request for generating bills in bulk from eleigible FROZEN, ACTIVE & PARTIALLY_PAID demands under a BusinessService.
+      required:
+        - businessServiceCode
+      properties:
+        businessServiceCode:
+          type: string
+          minLength: 2
+          maxLength: 32
+          pattern: '^[A-Z][A-Z0-9_]{1,31}$'
+          description: |
+            Code of the owning Business Service (e.g., PT, TL, WS). Must reference an **active** service.
+            Pattern: uppercase letters, digits, underscore; must start with a letter.
+          example: PT
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional context such as requestedBy, reason, traceId
+
+    BulkBillResponse:
+      type: object
+      description: Used for bulk API operations.
+      properties:
+        businessServiceCode:
+          type: string
+          minLength: 2
+          maxLength: 32
+          pattern: '^[A-Z][A-Z0-9_]{1,31}$'
+          description: |
+            Code of the owning Business Service (e.g., PT, TL, WS). Must reference an **active** service.
+            Pattern: uppercase letters, digits, underscore; must start with a letter.
+          example: PT
+        totalJobsCreated:
+          type: integer
+          format: int64
+          example: 42
+        totalConsumerProcessed:
+          type: integer
+          format: int64
+          example: 20500
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional context such as requestedBy, reason, traceId
 
     Bill:
       type: object
