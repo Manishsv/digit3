@@ -2570,7 +2570,7 @@ components:
           type: integer
           format: int64
           example: 42
-        totalConsumerProcessed:
+        totalConsumersIdentified:
           type: integer
           format: int64
           example: 20500
