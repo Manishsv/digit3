@@ -1,0 +1,4 @@
+username,password,email,roles
+# roles: pipe-separated realm role names (must exist — create via ONBOARDING_ROLES)
+# gro1,ChangeMe!,gro1@example.gov,GRO
+# citizen1,ChangeMe!,citizen1@example.gov,CITIZEN

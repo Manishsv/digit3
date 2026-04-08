@@ -1,10 +1,14 @@
 package models
 
 import (
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
+
+// Matches DB columns created_by, modified_by (VARCHAR(64) in Flyway initial schema).
+const maxAuditUserIDLength = 64
 
 // AuditDetail represents audit information for database records.
 type AuditDetail struct {
@@ -14,28 +18,52 @@ type AuditDetail struct {
 	ModifiedTime int64  `json:"modifiedTime,omitempty" db:"modified_at" gorm:"column:modified_at"`
 }
 
-// GetUserIDFromContext extracts user ID from X-Client-Id header with fallback to "system"
-func GetUserIDFromContext(c *gin.Context) string {
-	clientID := c.GetHeader("X-Client-Id")
-	if clientID == "" {
-		return "system" // Fallback if no client ID provided
+// ClampAuditUserID trims and truncates to fit VARCHAR(64) audit columns.
+func ClampAuditUserID(s string) string {
+	s = strings.TrimSpace(s)
+	if len(s) > maxAuditUserIDLength {
+		return s[:maxAuditUserIDLength]
 	}
-	return clientID
+	return s
+}
+
+// GetUserIDFromContext extracts user ID from X-Client-Id / X-Client-ID and truncates to fit VARCHAR(64).
+func GetUserIDFromContext(c *gin.Context) string {
+	clientID := strings.TrimSpace(c.GetHeader("X-Client-Id"))
+	if clientID == "" {
+		clientID = strings.TrimSpace(c.GetHeader("X-Client-ID"))
+	}
+	if clientID == "" {
+		return "system"
+	}
+	return ClampAuditUserID(clientID)
 }
 
 // SetAuditDetailsForCreate sets audit details for a new record creation
 func (a *AuditDetail) SetAuditDetailsForCreate(userID string) {
 	now := time.Now().UnixMilli()
-	a.CreatedBy = userID
+	u := strings.TrimSpace(userID)
+	if u == "" {
+		u = "system"
+	} else {
+		u = ClampAuditUserID(u)
+	}
+	a.CreatedBy = u
 	a.CreatedTime = now
-	a.ModifiedBy = userID
+	a.ModifiedBy = u
 	a.ModifiedTime = now
 }
 
 // SetAuditDetailsForUpdate sets audit details for record update
 func (a *AuditDetail) SetAuditDetailsForUpdate(userID string) {
 	now := time.Now().UnixMilli()
-	a.ModifiedBy = userID
+	u := strings.TrimSpace(userID)
+	if u == "" {
+		u = "system"
+	} else {
+		u = ClampAuditUserID(u)
+	}
+	a.ModifiedBy = u
 	a.ModifiedTime = now
 }
 

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"idgen/internal/models"
 	"idgen/internal/service"
 	"net/http"
@@ -9,20 +10,39 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Matches V20260405120000__extend_idgen_varchar_columns.sql (was VARCHAR(64)).
+const idgenStringMax = 255
+const idgenClientIDMaxLegacy = 64 // audit columns were VARCHAR(64); truncate so inserts work before migrate (same as boundary).
+
+func trimTenantID(c *gin.Context) (string, error) {
+	t := strings.TrimSpace(c.GetHeader("X-Tenant-ID"))
+	if t == "" {
+		return "", fmt.Errorf("missing X-Tenant-ID")
+	}
+	if len(t) > idgenStringMax {
+		return "", fmt.Errorf("X-Tenant-ID length %d exceeds %d (run idgen DB migration V20260405120000 or shorten realm)", len(t), idgenStringMax)
+	}
+	return t, nil
+}
+
+// Prefer X-Client-ID / X-Client-Id; truncate to idgenClientIDMaxLegacy (safe on unmigrated VARCHAR(64) DB).
+func effectiveClientID(c *gin.Context) string {
+	cid := strings.TrimSpace(c.GetHeader("X-Client-ID"))
+	if cid == "" {
+		cid = strings.TrimSpace(c.GetHeader("X-Client-Id"))
+	}
+	if len(cid) > idgenClientIDMaxLegacy {
+		return cid[:idgenClientIDMaxLegacy]
+	}
+	return cid
+}
+
 type IDGenHandler struct {
 	svc *service.IDGenService
 }
 
 func NewIDGenHandler(svc *service.IDGenService) *IDGenHandler {
 	return &IDGenHandler{svc: svc}
-}
-
-func getTenantIDFromHeader(c *gin.Context) string {
-	return c.GetHeader("X-Tenant-ID")
-}
-
-func getClientIDFromHeader(c *gin.Context) string {
-	return c.GetHeader("X-Client-ID")
 }
 
 // RegisterTemplate handles POST /template
@@ -37,17 +57,35 @@ func (h *IDGenHandler) CreateTemplate(c *gin.Context) {
 		return
 	}
 
-	req.TenantID = getTenantIDFromHeader(c)
-	if req.TenantID == "" {
+	tenantID, err := trimTenantID(c)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, models.Error{
 			Code:        "BAD_REQUEST",
-			Message:     "Missing required tenantId",
-			Description: "Request must include tenantId in headers",
+			Message:     "Missing or invalid tenant",
+			Description: err.Error(),
 		})
 		return
 	}
+	req.TenantID = tenantID
 
-	req.AuditDetails.CreatedBy = getClientIDFromHeader(c)
+	if tc := strings.TrimSpace(req.TemplateCode); tc == "" {
+		c.JSON(http.StatusBadRequest, models.Error{
+			Code:        "BAD_REQUEST",
+			Message:     "templateCode is required",
+			Description: "templateCode must be non-empty",
+		})
+		return
+	} else if len(tc) > idgenStringMax {
+		c.JSON(http.StatusBadRequest, models.Error{
+			Code:        "BAD_REQUEST",
+			Message:     "templateCode too long",
+			Description: fmt.Sprintf("templateCode length %d exceeds %d", len(tc), idgenStringMax),
+		})
+		return
+	}
+	req.TemplateCode = strings.TrimSpace(req.TemplateCode)
+
+	req.AuditDetails.CreatedBy = effectiveClientID(c)
 
 	idgenTemplateDB, err := h.svc.CreateTemplate(&req)
 	if err != nil {
@@ -90,17 +128,18 @@ func (h *IDGenHandler) UpdateTemplate(c *gin.Context) {
 		return
 	}
 
-	req.TenantID = getTenantIDFromHeader(c)
-	if req.TenantID == "" {
+	tenantID, errT := trimTenantID(c)
+	if errT != nil {
 		c.JSON(http.StatusBadRequest, models.Error{
 			Code:        "BAD_REQUEST",
-			Message:     "Missing required tenantId",
-			Description: "Request must include tenantId in headers",
+			Message:     "Missing or invalid tenant",
+			Description: errT.Error(),
 		})
 		return
 	}
+	req.TenantID = tenantID
 
-	req.AuditDetails.LastModifiedBy = getClientIDFromHeader(c)
+	req.AuditDetails.LastModifiedBy = effectiveClientID(c)
 
 	idgenTemplateDB, err := h.svc.UpdateTemplate(&req)
 	if err != nil {
@@ -146,15 +185,16 @@ func (h *IDGenHandler) SearchTemplates(c *gin.Context) {
 	if idsStr := c.Query("ids"); idsStr != "" {
 		search.IDs = strings.Split(idsStr, ",")
 	}
-	search.TenantID = getTenantIDFromHeader(c)
-	if search.TenantID == "" {
+	tid, errT := trimTenantID(c)
+	if errT != nil {
 		c.JSON(http.StatusBadRequest, models.Error{
 			Code:        "BAD_REQUEST",
-			Message:     "Missing required tenantId",
-			Description: "Request must include tenantId in headers",
+			Message:     "Missing or invalid tenant",
+			Description: errT.Error(),
 		})
 		return
 	}
+	search.TenantID = tid
 
 	templateDBList, err := h.svc.SearchTemplates(&search)
 	if err != nil {
@@ -194,15 +234,16 @@ func (h *IDGenHandler) DeleteTemplate(c *gin.Context) {
 		})
 		return
 	}
-	deleteReq.TenantID = getTenantIDFromHeader(c)
-	if deleteReq.TenantID == "" {
+	tid, errT := trimTenantID(c)
+	if errT != nil {
 		c.JSON(http.StatusBadRequest, models.Error{
 			Code:        "BAD_REQUEST",
-			Message:     "Missing required tenantId",
-			Description: "Request must include tenantId in headers",
+			Message:     "Missing or invalid tenant",
+			Description: errT.Error(),
 		})
 		return
 	}
+	deleteReq.TenantID = tid
 
 	if err := h.svc.DeleteTemplate(deleteReq.TemplateCode, deleteReq.TenantID, deleteReq.Version); err != nil {
 		if strings.Contains(err.Error(), "record not found") {
@@ -234,15 +275,16 @@ func (h *IDGenHandler) GenerateID(c *gin.Context) {
 		return
 	}
 
-	req.TenantID = getTenantIDFromHeader(c)
-	if req.TenantID == "" {
+	tid, errT := trimTenantID(c)
+	if errT != nil {
 		c.JSON(http.StatusBadRequest, models.Error{
 			Code:        "BAD_REQUEST",
-			Message:     "Missing required tenantId",
-			Description: "Request must include tenantId in headers",
+			Message:     "Missing or invalid tenant",
+			Description: errT.Error(),
 		})
 		return
 	}
+	req.TenantID = tid
 
 	response, err := h.svc.GenerateID(req.TenantID, req.TemplateCode, req.Variables)
 	if err != nil {

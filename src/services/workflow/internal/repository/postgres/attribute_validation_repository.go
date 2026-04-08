@@ -23,12 +23,16 @@ func NewAttributeValidationRepository(db *gorm.DB) repository.AttributeValidatio
 func (r *attributeValidationRepository) CreateAttributeValidation(ctx context.Context, validation *models.AttributeValidation) error {
 	validation.ID = uuid.New().String()
 
-	// Set default audit values if not provided
+	// Set default audit values if not provided; clamp any client-supplied values to VARCHAR(64).
 	if validation.AuditDetail.CreatedBy == "" {
 		validation.AuditDetail.CreatedBy = "system"
+	} else {
+		validation.AuditDetail.CreatedBy = models.ClampAuditUserID(validation.AuditDetail.CreatedBy)
 	}
 	if validation.AuditDetail.ModifiedBy == "" {
 		validation.AuditDetail.ModifiedBy = "system"
+	} else {
+		validation.AuditDetail.ModifiedBy = models.ClampAuditUserID(validation.AuditDetail.ModifiedBy)
 	}
 
 	now := time.Now().UnixMilli()

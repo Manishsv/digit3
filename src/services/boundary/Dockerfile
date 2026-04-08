@@ -6,8 +6,7 @@
     COPY go.mod go.sum ./
     RUN go mod download
     COPY . .
-    # Build for ARM64 architecture (matches your cluster nodes)
-    RUN CGO_ENABLED=0 GOOS=linux go build -o boundary main.go
+    RUN CGO_ENABLED=0 GOOS=linux go build -o boundary ./cmd/server/main.go
     
     # --- Final image ---
     FROM alpine:3.19

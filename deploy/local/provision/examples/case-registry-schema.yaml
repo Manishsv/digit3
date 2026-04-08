@@ -1,0 +1,28 @@
+# Case-type registry schema (complaints / service requests). Used by service-setup.
+# Extend with workflow codes, boundary, file refs, etc. See digit3 docs tutorials pgr2 sample.
+schemaCode: "complaints.case"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: false
+  properties:
+    serviceRequestId:
+      type: "string"
+    tenantId:
+      type: "string"
+    serviceCode:
+      type: "string"
+      description: "Case / service type code"
+    description:
+      type: "string"
+    boundaryCode:
+      type: "string"
+    applicationStatus:
+      type: "string"
+    processId:
+      type: "string"
+    workflowInstanceId:
+      type: "string"
+    fileStoreId:
+      type: "string"
+  required: ["serviceRequestId", "tenantId", "serviceCode"]

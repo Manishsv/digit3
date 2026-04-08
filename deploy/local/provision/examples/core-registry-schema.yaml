@@ -1,0 +1,18 @@
+# Core platform registry schema (tenant-wide, not case-type specific).
+# Used by account-setup --platform. Adjust fields to match your deployment.
+schemaCode: "core.facility"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: false
+  properties:
+    facilityCode:
+      type: "string"
+      description: "Stable facility / org unit code"
+    facilityName:
+      type: "string"
+    tenantId:
+      type: "string"
+    active:
+      type: "boolean"
+  required: ["facilityCode", "facilityName", "tenantId"]

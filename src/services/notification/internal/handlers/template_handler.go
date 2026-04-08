@@ -10,6 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// notification_template.createdby / lastmodifiedby are VARCHAR(64) (Flyway V20250917151210).
+const notificationAuditClientMax = 64
+
 type TemplateHandler struct {
 	service   *service.TemplateService
 	validator *validation.TemplateValidator
@@ -24,7 +27,14 @@ func getTenantIDFromHeader(c *gin.Context) string {
 }
 
 func getClientIDFromHeader(c *gin.Context) string {
-	return c.GetHeader("X-Client-ID")
+	cid := strings.TrimSpace(c.GetHeader("X-Client-ID"))
+	if cid == "" {
+		cid = strings.TrimSpace(c.GetHeader("X-Client-Id"))
+	}
+	if len(cid) > notificationAuditClientMax {
+		return cid[:notificationAuditClientMax]
+	}
+	return cid
 }
 
 // Create template handles POST /template

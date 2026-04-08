@@ -35,6 +35,8 @@ func (r *actionRepository) CreateAction(ctx context.Context, action *models.Acti
 	createdBy := action.AuditDetail.CreatedBy
 	if createdBy == "" {
 		createdBy = "system"
+	} else {
+		createdBy = models.ClampAuditUserID(createdBy)
 	}
 
 	// Set audit details

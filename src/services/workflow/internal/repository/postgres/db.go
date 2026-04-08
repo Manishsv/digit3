@@ -11,8 +11,9 @@ import (
 
 // NewDB creates a new GORM database connection.
 func NewDB(cfg config.DBConfig) (*gorm.DB, error) {
-	// Construct the connection string from the configuration.
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+	// prefer_simple_protocol: avoid server-side prepared statement cache (SQLSTATE 0A000
+	// "cached plan must not change result type" after migrations / column type changes while pool is warm).
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s prefer_simple_protocol=true",
 		cfg.Host,
 		cfg.Port,
 		cfg.User,

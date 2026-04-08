@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"strings"
+
 	"idgen/internal/config"
 	"idgen/internal/handlers"
 	"idgen/internal/repository"
@@ -17,6 +19,16 @@ func SetupRoutes(db *gorm.DB, cfg *config.Config) *gin.Engine {
 	repo := repository.NewIDGenRepository(db)
 	svc := service.NewIDGenService(repo)
 	handler := handlers.NewIDGenHandler(svc)
+
+	// Liveness for Docker / load balancers (no auth, no tenant).
+	base := strings.TrimSpace(cfg.ServerContextPath)
+	base = strings.TrimRight(base, "/")
+	if base == "" {
+		base = "/idgen"
+	}
+	router.GET(base+"/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok", "service": "idgen"})
+	})
 
 	// API routes
 	api := router.Group(cfg.ServerContextPath)

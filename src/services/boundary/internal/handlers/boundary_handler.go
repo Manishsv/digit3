@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,6 +17,27 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 )
+
+// Matches V20260404120000__extend_boundary_v1_varchar.sql (widens columns from VARCHAR(64)).
+const boundaryStringMax = 255
+
+// Legacy createdby/lastmodifiedby were VARCHAR(64); truncate so inserts succeed before/after migration.
+const boundaryClientIDMaxLegacy = 64
+
+func sanitizeBoundaryCreateHeaders(tenantID, clientID string) (string, string, error) {
+	tenantID = strings.TrimSpace(tenantID)
+	clientID = strings.TrimSpace(clientID)
+	if tenantID == "" || clientID == "" {
+		return "", "", fmt.Errorf("missing X-Tenant-ID or X-Client-Id")
+	}
+	if len(tenantID) > boundaryStringMax {
+		return "", "", fmt.Errorf("X-Tenant-ID length %d exceeds %d (shorten realm or run boundary DB migration V20260404120000)", len(tenantID), boundaryStringMax)
+	}
+	if len(clientID) > boundaryClientIDMaxLegacy {
+		clientID = clientID[:boundaryClientIDMaxLegacy]
+	}
+	return tenantID, clientID, nil
+}
 
 // BoundaryHandler handles HTTP requests for boundary operations
 type BoundaryHandler struct {
@@ -80,11 +102,10 @@ func (h *BoundaryHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	tenantID := ctx.GetHeader("X-Tenant-ID")
-	clientID := ctx.GetHeader("X-Client-Id")
-	if tenantID == "" || clientID == "" {
-		span.SetStatus(codes.Error, "Missing headers")
-		errorResponse(ctx, http.StatusBadRequest, "BAD_REQUEST", "Missing X-Tenant-ID or X-Client-Id header", "Invalid request payload", nil)
+	tenantID, clientID, errHdr := sanitizeBoundaryCreateHeaders(ctx.GetHeader("X-Tenant-ID"), ctx.GetHeader("X-Client-Id"))
+	if errHdr != nil {
+		span.SetStatus(codes.Error, "Invalid headers")
+		errorResponse(ctx, http.StatusBadRequest, "BAD_REQUEST", errHdr.Error(), "Invalid request payload", nil)
 		return
 	}
 
@@ -101,10 +122,16 @@ func (h *BoundaryHandler) Create(ctx *gin.Context) {
 	for i := range request.Boundary {
 		request.Boundary[i].ID = ""
 		request.Boundary[i].TenantID = tenantID
-		if strings.TrimSpace(request.Boundary[i].Code) == "" {
+		code := strings.TrimSpace(request.Boundary[i].Code)
+		if code == "" {
 			errorResponse(ctx, http.StatusBadRequest, "BAD_REQUEST", "code is required for each boundary", "Invalid request payload", nil)
 			return
 		}
+		if len(code) > boundaryStringMax {
+			errorResponse(ctx, http.StatusBadRequest, "BAD_REQUEST", fmt.Sprintf("boundary code length %d exceeds %d", len(code), boundaryStringMax), "Invalid request payload", nil)
+			return
+		}
+		request.Boundary[i].Code = code
 		// Geometry type validation
 		var geom map[string]interface{}
 		if err := json.Unmarshal(request.Boundary[i].Geometry, &geom); err != nil {
