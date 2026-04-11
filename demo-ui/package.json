@@ -1,0 +1,16 @@
+{
+  "name": "demo-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -n proxy,web -c auto \"npm --prefix proxy run dev\" \"npm --prefix web run dev\"",
+    "start": "concurrently -n proxy,web -c auto \"npm --prefix proxy start\" \"npm --prefix web run preview -- --port 5177\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

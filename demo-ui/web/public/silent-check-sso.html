@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>silent-check-sso</title>
+  </head>
+  <body>
+    <script>
+      // Keycloak JS uses this page for silent SSO checks (prompt=none) via an iframe.
+      parent.postMessage(location.href, location.origin);
+    </script>
+  </body>
+</html>
+

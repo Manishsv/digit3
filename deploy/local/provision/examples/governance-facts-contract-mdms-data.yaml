@@ -1,0 +1,29 @@
+# Facts contracts for local provision.
+# `account-setup.sh` substitutes __TENANT_ID__ with KEYCLOAK_REALM before `digit create-mdms-data`.
+# MDMS requires non-empty values for x-unique fields; governance matches tenant rows by tenantId.
+mdms:
+  - schemaCode: governance.factsContract
+    uniqueIdentifier: TENANT___TENANT_ID___SBL_DEFAULT_v1
+    data:
+      contractCode: SBL_DEFAULT
+      contractVersion: "1"
+      tenantId: __TENANT_ID__
+      extendsContractCode: ""
+      factsJsonSchema:
+        type: object
+        additionalProperties: true
+        properties:
+          application:
+            type: object
+            additionalProperties: true
+            properties:
+              status:
+                type: string
+        required: []
+      allowedOutcomeStatuses:
+        - ELIGIBLE
+        - INELIGIBLE
+        - NO_MATCH
+        - PENDING
+      allowedRegistrySchemaCodes: []
+    isActive: true

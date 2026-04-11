@@ -31,6 +31,8 @@ MDMS_SCHEMA_FILE="${MDMS_SCHEMA_FILE:-$EXAMPLES/example-schema.yaml}"
 MDMS_DATA_FILE="${MDMS_DATA_FILE:-$EXAMPLES/example-mdms-data.yaml}"
 CASE_REGISTRY_SCHEMA_FILE="${CASE_REGISTRY_SCHEMA_FILE:-$PROVISION_ROOT/examples/case-registry-schema.yaml}"
 WORKFLOW_FILE="${WORKFLOW_FILE:-$EXAMPLES/example-workflow.yaml}"
+FACTS_CONTRACT_CODE="${FACTS_CONTRACT_CODE:-}"
+FACTS_CONTRACT_VERSION="${FACTS_CONTRACT_VERSION:-1}"
 
 if [[ -f "$MDMS_SCHEMA_FILE" ]]; then
   echo "=== MDMS schema (module masters) ==="
@@ -48,7 +50,14 @@ fi
 
 if [[ -f "$CASE_REGISTRY_SCHEMA_FILE" ]]; then
   echo "=== Case-type registry schema ==="
-  provision_run_digit create-registry-schema --file "$CASE_REGISTRY_SCHEMA_FILE" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT"
+  if [[ -n "$FACTS_CONTRACT_CODE" ]]; then
+    "$PROVISION_ROOT/create-registry-schema-with-contract.sh" \
+      --file "$CASE_REGISTRY_SCHEMA_FILE" \
+      --contract "$FACTS_CONTRACT_CODE" \
+      --version "$FACTS_CONTRACT_VERSION"
+  else
+    provision_run_digit create-registry-schema --file "$CASE_REGISTRY_SCHEMA_FILE" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT"
+  fi
 else
   echo "Skip case registry (missing): $CASE_REGISTRY_SCHEMA_FILE"
 fi

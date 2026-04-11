@@ -1,0 +1,6 @@
+# Registry schema for Governance ruleset publish (`POST /governance/v1/rulesets`).
+schemaCode: "governance.ruleset"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: true

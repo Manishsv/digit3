@@ -35,3 +35,7 @@ docker system prune -f --volumes (⚠️ be cautious — this removes all unused
 Run in terminal: echo "127.0.0.1 keycloak" | sudo tee -a /etc/hosts(for windows update it manually in C:\Windows\System32\drivers\etc\hosts
 )
 
+## GCP demo (single VM)
+
+See `deploy/gcp-vm-demo/README.md`.
+

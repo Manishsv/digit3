@@ -1,0 +1,2 @@
+"""Studio service application package."""
+

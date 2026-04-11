@@ -1,0 +1,6 @@
+# Registry schema for orders (`governance.order`) — optional but provisioned for completeness.
+schemaCode: "governance.order"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: true

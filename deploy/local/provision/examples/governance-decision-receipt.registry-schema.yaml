@@ -1,0 +1,6 @@
+# Registry schema for decision receipts (`governance.decisionReceipt`).
+schemaCode: "governance.decisionReceipt"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: true

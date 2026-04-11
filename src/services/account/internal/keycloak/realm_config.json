@@ -25,7 +25,7 @@
   "oauth2DeviceCodeLifespan": 600,
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
-  "sslRequired": "external",
+  "sslRequired": "none",
   "registrationAllowed": true,
   "registrationEmailAsUsername": false,
   "rememberMe": false,
@@ -3582,6 +3582,58 @@
       }
     },
     {
+      "clientId": "demo-ui",
+      "name": "DIGIT Demo UI (local SPA)",
+      "description": "Public SPA used by digit3 demo-ui (Vite). PKCE + standard flow; redirect URIs cover localhost and 127.0.0.1 on the default dev port.",
+      "rootUrl": "",
+      "baseUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": true,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost:5177/*",
+        "http://127.0.0.1:5177/*",
+        "http://localhost:5177/silent-check-sso.html",
+        "http://127.0.0.1:5177/silent-check-sso.html"
+      ],
+      "webOrigins": [
+        "http://localhost:5177",
+        "http://127.0.0.1:5177"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "post.logout.redirect.uris": "+",
+        "pkce.code.challenge.method": "S256"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "basic",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
       "clientId": "sandbox-ui-client",
       "name": "",
       "description": "",
@@ -5215,7 +5267,7 @@
       "config": {}
     }
   ],
-  "browserFlow": "Copy of browser",
+  "browserFlow": "browser",
   "registrationFlow": "registration",
   "directGrantFlow": "direct grant",
   "resetCredentialsFlow": "reset credentials",

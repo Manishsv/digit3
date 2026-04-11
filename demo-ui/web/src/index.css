@@ -1,0 +1,815 @@
+:root {
+  --text: #374151;
+  --text-h: #111827;
+  --bg: #ffffff;
+  --border: #d1d5db;
+  --code-bg: #f3f4f6;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 16px/145% var(--sans);
+  letter-spacing: 0.1px;
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  text-align: left;
+  border-inline: 0;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 13px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: white;
+  color: var(--text-h);
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: white;
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ——— DIGIT Console (cloud-style shell) ——— */
+.digit-console {
+  --console-border: #dadce0;
+  --console-surface: #f8f9fa;
+  --console-topbar-h: 56px;
+  --console-sidebar-w: 260px;
+  --console-accent: #1a73e8;
+  --console-accent-soft: #e8f0fe;
+  --console-text-muted: #5f6368;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--text);
+}
+
+.digit-console-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: var(--console-topbar-h);
+  padding: 0 20px;
+  border-bottom: 1px solid var(--console-border);
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+
+.digit-console-topbar-left {
+  flex: 0 0 auto;
+}
+
+.digit-console-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-h);
+}
+
+.digit-console-brand-title {
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.digit-console-brand-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--console-text-muted);
+  border: 1px solid var(--console-border);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.digit-console-breadcrumbs {
+  flex: 1 1 200px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 0;
+  font-size: 14px;
+  color: var(--console-text-muted);
+  min-width: 0;
+}
+
+.digit-console-breadcrumb-sep {
+  margin: 0 6px;
+  color: var(--console-border);
+  user-select: none;
+}
+
+.digit-console-breadcrumb-link {
+  color: var(--console-accent);
+  text-decoration: none;
+}
+
+.digit-console-breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.digit-console-breadcrumb-current {
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+.digit-console-topbar-right {
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.digit-console-context {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.digit-console-context-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--console-text-muted);
+}
+
+.digit-console-context-select {
+  min-width: 160px;
+  max-width: 220px;
+}
+
+.digit-console-context-link {
+  font-size: 13px;
+  color: var(--console-accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.digit-console-context-link:hover {
+  text-decoration: underline;
+}
+
+.digit-console-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--console-text-muted);
+  border-left: 1px solid var(--console-border);
+  padding-left: 16px;
+}
+
+.digit-console-user-line code {
+  font-size: 11px;
+}
+
+.digit-console-logout {
+  margin-top: 4px;
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+.digit-console-body {
+  display: grid;
+  grid-template-columns: var(--console-sidebar-w) 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 960px) {
+  .digit-console-body {
+    grid-template-columns: 1fr;
+  }
+  .digit-console-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--console-border);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .digit-console-nav-group {
+    min-width: 140px;
+  }
+}
+
+.digit-console-sidebar {
+  background: var(--console-surface);
+  border-right: 1px solid var(--console-border);
+  padding: 12px 10px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.digit-console-nav-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--console-text-muted);
+  padding: 0 10px 6px;
+}
+
+.digit-console-nav-item {
+  display: block;
+  padding: 8px 12px;
+  margin: 2px 4px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-h);
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+
+.digit-console-nav-item:hover {
+  background: #fff;
+  border-color: var(--console-border);
+}
+
+.digit-console-nav-item-active {
+  background: var(--console-accent-soft);
+  border-color: #d2e3fc;
+  color: #174ea6;
+  font-weight: 500;
+}
+
+.digit-console-main {
+  padding: 24px 28px 40px;
+  min-width: 0;
+  max-width: 1200px;
+}
+
+/* Console page primitives */
+.console-page-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.console-page-lead {
+  margin: 0 0 20px;
+  color: var(--console-text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.console-card {
+  border: 1px solid var(--console-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+
+.console-card h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+a.console-card {
+  display: block;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.console-card:hover {
+  border-color: #8ab4f8;
+  box-shadow: 0 1px 8px rgb(26 115 232 / 10%);
+}
+
+/* Full-screen welcome (outside console chrome) */
+.digit-console-welcome {
+  min-height: 100svh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px 64px;
+  background: var(--console-surface, #f8f9fa);
+}
+
+.digit-console-welcome-card {
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  border: 1px solid var(--console-border, #dadce0);
+  border-radius: 16px;
+  padding: 28px 28px 32px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+}
+
+.digit-console-welcome-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.digit-console-welcome-pick {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--console-border, #dadce0);
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.digit-console-welcome-pick:hover {
+  border-color: #8ab4f8;
+  background: var(--console-accent-soft, #e8f0fe);
+}
+
+.digit-console-welcome-pick-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.digit-console-welcome-pick-id {
+  font-size: 13px;
+  font-family: var(--mono);
+  color: var(--console-text-muted, #5f6368);
+}
+
+a.digit-console-welcome-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: var(--console-accent, #1a73e8);
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+a.digit-console-welcome-cta:hover {
+  filter: brightness(1.05);
+}
+
+.digit-console-welcome-secondary {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--console-border, #dadce0);
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.console-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--console-border);
+  padding-bottom: 2px;
+}
+
+.console-tab {
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--console-text-muted);
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+}
+
+.console-tab:hover {
+  background: var(--console-surface);
+  color: var(--text-h);
+}
+
+.console-tab-active {
+  color: var(--console-accent);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--console-accent);
+}
+
+.console-table-wrap {
+  overflow: auto;
+  border: 1px solid var(--console-border);
+  border-radius: 10px;
+}
+
+.console-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.console-table th,
+.console-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+.console-table th {
+  background: var(--console-surface);
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.console-table tr:last-child td {
+  border-bottom: none;
+}
+
+.console-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.console-chip-ok {
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.console-chip-warn {
+  background: #fef7e0;
+  color: #b06000;
+}
+
+.console-chip-err {
+  background: #fce8e6;
+  color: #c5221f;
+}
+
+.console-dl {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) 1fr;
+  gap: 8px 16px;
+  font-size: 14px;
+  margin: 0;
+}
+
+.console-dl dt {
+  margin: 0;
+  color: var(--console-text-muted);
+  font-weight: 500;
+}
+
+.console-dl dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.console-muted {
+  color: var(--console-text-muted);
+  font-size: 13px;
+}
+
+.console-json {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  background: var(--code-bg);
+  padding: 12px;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 420px;
+}
+
+/* ——— Login (standalone, outside console chrome) ——— */
+.digit-login {
+  min-height: 100svh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: var(--console-surface, #f8f9fa);
+}
+
+.digit-login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid var(--console-border, #dadce0);
+  border-radius: 16px;
+  padding: 32px 28px 28px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+}
+
+.digit-login-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.digit-login-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-h);
+  letter-spacing: -0.02em;
+}
+
+.digit-login-lead {
+  margin: 0 0 22px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--console-text-muted, #5f6368);
+}
+
+.digit-login-mode {
+  display: flex;
+  margin-bottom: 20px;
+  border: 1px solid var(--console-border, #dadce0);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.digit-login-mode-btn {
+  flex: 1;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: #fff;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--console-text-muted, #5f6368);
+}
+
+.digit-login-mode-btn + .digit-login-mode-btn {
+  border-left: 1px solid var(--console-border, #dadce0);
+}
+
+.digit-login-mode-btn:hover {
+  background: #fafafa;
+}
+
+.digit-login-mode-btn-active {
+  background: var(--console-accent-soft, #e8f0fe);
+  color: #174ea6;
+}
+
+.digit-login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.digit-login-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.digit-login-label > span:first-child {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--console-text-muted, #5f6368);
+}
+
+.digit-login-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.digit-login-btn-primary {
+  width: 100%;
+  justify-content: center;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: var(--console-accent, #1a73e8);
+  color: #fff;
+  cursor: pointer;
+}
+
+.digit-login-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.digit-login-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.digit-login-btn-ghost {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+  border: 1px solid var(--console-border, #dadce0);
+  background: #fff;
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.digit-login-btn-ghost:hover {
+  background: var(--console-surface, #f8f9fa);
+}
+
+.digit-login-details {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.digit-login-details summary {
+  cursor: pointer;
+  color: var(--console-accent, #1a73e8);
+  font-weight: 500;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.digit-login-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.digit-login-details[open] summary {
+  margin-bottom: 10px;
+}
+
+.digit-login-footer {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--console-border, #dadce0);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--console-text-muted, #5f6368);
+}
+
+.digit-login-roles {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--code-bg);
+  border-radius: 10px;
+}
+
+.digit-login-role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-h);
+}
+
+.digit-login-banner {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.digit-login-banner--success {
+  background: #e6f4ea;
+  border: 1px solid #ceead6;
+  color: #137333;
+}
+
+.digit-login-banner--error {
+  background: #fce8e6;
+  border: 1px solid #f9d7d3;
+  color: #c5221f;
+}
+
+.digit-login-link-back {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: var(--console-accent, #1a73e8);
+  text-decoration: none;
+  padding: 8px;
+}
+
+.digit-login-link-back:hover {
+  text-decoration: underline;
+}
+
+.digit-login-register-prompt {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: var(--console-text-muted, #5f6368);
+}
+
+.digit-login-register-prompt a {
+  color: var(--console-accent, #1a73e8);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.digit-login-register-prompt a:hover {
+  text-decoration: underline;
+}

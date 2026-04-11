@@ -12,7 +12,7 @@ definition:
       type: "string"
     serviceCode:
       type: "string"
-      description: "Case / service type code"
+      description: "Case / service type code; SHOULD match studio.service.serviceCode for the tenant."
     description:
       type: "string"
     boundaryCode:

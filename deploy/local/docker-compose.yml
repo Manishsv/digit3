@@ -18,6 +18,7 @@ services:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -138,10 +139,13 @@ services:
     image: egovio/keycloak:keycloak-spi-multiarch
     mem_limit: 1g
     environment:
-      KC_PROXY: edge
-      KC_HOSTNAME: keycloak
+      # Local dev: allow plain HTTP token flows
+      KC_PROXY: none
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: "8080"
       KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HTTP_RELATIVE_PATH: /keycloak
       KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
       KC_DB: postgres
@@ -367,12 +371,14 @@ services:
       KEYCLOAK_BASE_URL: http://keycloak:8080/keycloak
       KEYCLOAK_ADMIN_USER: admin
       KEYCLOAK_ADMIN_PASS: admin
-      KEYCLOAK_REALM_CONFIG_PATH: realm_config.json
+      KEYCLOAK_REALM_CONFIG_PATH: /realm_config.json
       NOTIFICATION_BASE_URL: http://notification:8080
       CITIZEN_BROKER_CLIENT_ID: citizen-broker
       CITIZEN_BROKER_CLIENT_SECRET: sW2iIWd6Da8JpeGoAuWWcnbDFYT31rk3-clientsecrete
     ports:
       - "8094:8080"
+    volumes:
+      - ../../src/services/account/internal/keycloak/realm_config.json:/realm_config.json:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -644,6 +650,104 @@ services:
     labels:
       - env=dev
       - app=mdms-v2
+    logging: *json-logging
+
+  coordination:
+    container_name: coordination
+    build:
+      context: ../../src/services/coordination
+      dockerfile: Dockerfile
+    image: digit-local/coordination:local
+    environment:
+      REGISTRY_BASE_URL: http://registry:8080
+      MDMS_BASE_URL: http://mdms-v2:8094
+      IDGEN_BASE_URL: http://idgen:8080
+      GOVERNANCE_BASE_URL: http://governance:8080
+      COORDINATION_DB_PATH: /app/data/coordination_index.db
+      IDGEN_ORG_VARIABLE: REGISTRY
+      VALIDATE_VOCAB: "false"
+      DEV_AUTH_ENABLED: "true"
+      DEV_AUTH_TOKEN: dev-local
+    ports:
+      - "8090:8080"
+    volumes:
+      - coordination_data:/app/data
+    depends_on:
+      registry:
+        condition: service_started
+      idgen:
+        condition: service_started
+      mdms-v2:
+        condition: service_started
+      governance:
+        condition: service_started
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=coordination
+    logging: *json-logging
+
+  governance:
+    container_name: governance
+    build:
+      context: ../../src/services/governance
+      dockerfile: Dockerfile
+    image: digit-local/governance:local
+    environment:
+      REGISTRY_BASE_URL: http://registry:8080
+      MDMS_BASE_URL: http://mdms-v2:8094
+      IDGEN_BASE_URL: http://idgen:8080
+      FILESTORE_BASE_URL: http://filestore:8080
+      NOTIFICATION_BASE_URL: http://notification:8080
+      GOVERNANCE_DB_PATH: /app/data/governance_index.db
+      IDGEN_ORG_VARIABLE: REGISTRY
+      DEV_AUTH_ENABLED: "true"
+      DEV_AUTH_TOKEN: dev-local
+    ports:
+      - "8098:8080"
+    volumes:
+      - governance_data:/app/data
+    depends_on:
+      registry:
+        condition: service_started
+      idgen:
+        condition: service_started
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=governance
+    logging: *json-logging
+
+  studio:
+    container_name: studio
+    build:
+      context: ../../src/services/studio
+      dockerfile: Dockerfile
+    image: digit-local/studio:local
+    environment:
+      REGISTRY_BASE_URL: http://registry:8080
+      IDGEN_BASE_URL: http://idgen:8080
+      MDMS_BASE_URL: http://mdms-v2:8094
+      GOVERNANCE_BASE_URL: http://governance:8080
+      STUDIO_DB_PATH: /app/data/studio_index.db
+      IDGEN_ORG_VARIABLE: REGISTRY
+      DEV_AUTH_ENABLED: "true"
+      DEV_AUTH_TOKEN: dev-local
+    ports:
+      - "8107:8080"
+    volumes:
+      - studio_data:/app/data
+    depends_on:
+      registry:
+        condition: service_started
+      idgen:
+        condition: service_started
+      governance:
+        condition: service_started
+    restart: unless-stopped
+    labels:
+      - env=dev
+      - app=studio
     logging: *json-logging
 
   filestore-migration:
@@ -1068,6 +1172,12 @@ volumes:
     name: redis_data
   minio_data:
     name: minio_data
+  coordination_data:
+    name: coordination_data
+  governance_data:
+    name: governance_data
+  studio_data:
+    name: studio_data
   vault_data:
     name: vault_data
   loki_data:

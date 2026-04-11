@@ -1,0 +1,6 @@
+# Registry schema for immutable decision traces (`governance.decisionTrace`).
+schemaCode: "governance.decisionTrace"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: true

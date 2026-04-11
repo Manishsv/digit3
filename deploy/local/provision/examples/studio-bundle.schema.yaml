@@ -1,0 +1,133 @@
+schemaCode: "studio.bundle"
+definition:
+  $schema: "https://json-schema.org/draft/2020-12/schema"
+  type: "object"
+  additionalProperties: false
+  properties:
+    id: { type: "string" }
+    tenantId: { type: "string" }
+    bundleId: { type: "string" }
+    serviceCode: { type: "string" }
+    version: { type: "string" }
+    status: { type: "string" }
+    rulesets:
+      type: "array"
+      items:
+        type: "object"
+        additionalProperties: true
+    metadata:
+      type: "object"
+      additionalProperties: true
+    factsContractCode:
+      type: "string"
+      description: Optional MDMS governance.factsContract.contractCode enforced on apply/publish
+    factsContractVersion:
+      type: "string"
+      description: Contract version (default 1)
+    serviceDefinition:
+      description: Optional definition snapshot for this bundle version (same shape as studio.service.serviceDefinition).
+      $ref: "#/definitions/serviceDefinitionV1"
+  required: ["id", "tenantId", "bundleId", "serviceCode", "version", "status"]
+  definitions:
+    serviceDefinitionV1:
+      type: "object"
+      additionalProperties: true
+      properties:
+        schemaVersion: { type: "string", const: "1.0" }
+        documentVersion: { type: "string", pattern: "^[0-9A-Za-z.\\-]{1,32}$" }
+        caseModel:
+          type: "object"
+          additionalProperties: true
+          properties:
+            caseIdPattern: { type: "string" }
+            factsContractCode: { type: "string" }
+            factsContractVersion: { type: "string" }
+            intakeFormRef: { type: "string" }
+            evidenceTypes:
+              type: "array"
+              items:
+                type: "object"
+                additionalProperties: true
+                required: ["evidenceType"]
+                properties:
+                  evidenceType: { type: "string" }
+                  maxFiles: { type: "integer" }
+                  mimeTypes: { type: "array", items: { type: "string" } }
+            registryPulls:
+              type: "array"
+              items:
+                type: "object"
+                additionalProperties: true
+                required: ["schemaCode", "lookupKey", "bindToFactsPath"]
+                properties:
+                  schemaCode: { type: "string" }
+                  lookupKey: { type: "string" }
+                  bindToFactsPath: { type: "string" }
+        governance:
+          type: "object"
+          additionalProperties: true
+          properties:
+            rulesetBindings:
+              type: "array"
+              items:
+                type: "object"
+                additionalProperties: true
+                required: ["rulesetId", "version"]
+                properties:
+                  rulesetId: { type: "string" }
+                  version: { type: "string" }
+                  registryRecordId: { type: "string" }
+                  precedence: { type: "integer" }
+        workflow:
+          type: "object"
+          additionalProperties: true
+          properties:
+            verificationProcessCode: { type: "string" }
+            fulfillmentProcessCode: { type: "string" }
+        rbac:
+          type: "object"
+          additionalProperties: true
+          properties:
+            roleMatrixRef: { type: "string" }
+        notifications:
+          type: "array"
+          items:
+            type: "object"
+            additionalProperties: true
+            required: ["event"]
+            properties:
+              event: { type: "string" }
+              channel: { type: "string", enum: ["email", "sms", "push"] }
+              templateRef: { type: "string" }
+        outputs:
+          type: "object"
+          additionalProperties: true
+          properties:
+            certificateTemplateRef: { type: "string" }
+        payments:
+          type: "object"
+          additionalProperties: true
+          properties:
+            model: { type: "string", enum: ["NONE", "FLAT", "RULE_REF", "EXTERNAL"] }
+            pricingRulesetRef: { type: "string" }
+        audit:
+          type: "object"
+          additionalProperties: true
+          properties:
+            traceProfile: { type: "string" }
+            coordinationTraceEnabled: { type: "boolean" }
+            governanceReceiptEnabled: { type: "boolean" }
+        appeals:
+          type: "object"
+          additionalProperties: true
+          properties:
+            appellateAuthorityRef: { type: "string" }
+            appealWindowDays: { type: "integer" }
+        bindings:
+          type: "object"
+          additionalProperties: true
+          properties:
+            registrySchemasUsed:
+              type: "array"
+              items: { type: "string" }
+

@@ -1,0 +1,43 @@
+# MDMS master for published "facts contracts" (platform + tenant overrides).
+# Load: digit create-schema --file ... --server $MDMS_BASE_URL --jwt-token $JWT
+schema:
+  code: governance.factsContract
+  description: Facts JSON Schema, allowed decision outcomes, optional registry schema allow-list for a governed program
+  isActive: true
+  definition:
+    $schema: "https://json-schema.org/draft/2020-12/schema"
+    type: object
+    additionalProperties: false
+    required:
+      - contractCode
+      - contractVersion
+      - tenantId
+      - factsJsonSchema
+    x-unique:
+      - contractCode
+      - contractVersion
+      - tenantId
+    properties:
+      contractCode:
+        type: string
+        description: Stable code (e.g. SBL_DEFAULT); tenant rows may use a different code that extends a platform contract
+      contractVersion:
+        type: string
+        default: "1"
+      tenantId:
+        type: string
+        description: Empty = platform-wide default; set to tenant code for overrides
+      extendsContractCode:
+        type: string
+        description: Optional parent contractCode to merge (facts schema allOf; outcomes/registry lists narrowed per resolver)
+      factsJsonSchema:
+        type: object
+        description: JSON Schema (draft 2020-12) for business facts (not rulesYaml)
+      allowedOutcomeStatuses:
+        type: array
+        items: { type: string }
+        description: Rule outcome.status values allowed when enforcing at publish time
+      allowedRegistrySchemaCodes:
+        type: array
+        items: { type: string }
+        description: If non-empty, registry schema codes must be in this set when using validateRegistrySchema

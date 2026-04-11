@@ -63,7 +63,7 @@ create_tenant() {
   if [[ -n "$tenant_code" ]]; then
     echo >&2
     echo "TENANT_CODE / realm: $tenant_code" >&2
-    echo "Set KEYCLOAK_REALM=$tenant_code in env.provision, configure OAuth client + user in Keycloak, then:" >&2
+    echo "Set KEYCLOAK_REALM=$tenant_code in env.provision; realm import includes public client demo-ui (Vite dev URIs). Add a test user in Keycloak, then:" >&2
     echo "  ./account-setup.sh --platform-only" >&2
   fi
 }
@@ -83,23 +83,89 @@ run_platform() {
   local boundaries_file core_registry
   boundaries_file="${CORE_BOUNDARIES_FILE:-${BOUNDARIES_FILE:-$EXAMPLES/example-boundaries.yaml}}"
   core_registry="${CORE_REGISTRY_SCHEMA_FILE:-$PROVISION_ROOT/examples/core-registry-schema.yaml}"
+  local studio_service_schema studio_bundle_schema
+  studio_service_schema="$PROVISION_ROOT/examples/studio-service.schema.yaml"
+  studio_bundle_schema="$PROVISION_ROOT/examples/studio-bundle.schema.yaml"
+  local gov_ruleset_schema gov_trace_schema gov_receipt_schema gov_order_schema gov_appeal_schema
+  gov_ruleset_schema="$PROVISION_ROOT/examples/governance-ruleset.registry-schema.yaml"
+  gov_trace_schema="$PROVISION_ROOT/examples/governance-decision-trace.registry-schema.yaml"
+  gov_receipt_schema="$PROVISION_ROOT/examples/governance-decision-receipt.registry-schema.yaml"
+  gov_order_schema="$PROVISION_ROOT/examples/governance-order.registry-schema.yaml"
+  gov_appeal_schema="$PROVISION_ROOT/examples/governance-appeal.registry-schema.yaml"
 
   if [[ -f "$boundaries_file" ]]; then
     echo "=== Boundaries (platform) ==="
-    provision_run_digit create-boundaries --file "$boundaries_file" --server "$BOUNDARY_BASE_URL" --jwt-token "$JWT"
+    provision_run_digit create-boundaries --file "$boundaries_file" --server "$BOUNDARY_BASE_URL" --jwt-token "$JWT" || true
   else
     echo "Skip boundaries (missing): $boundaries_file"
   fi
 
   if [[ -f "$core_registry" ]]; then
     echo "=== Core registry schema ==="
-    provision_run_digit create-registry-schema --file "$core_registry" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT"
+    provision_run_digit create-registry-schema --file "$core_registry" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
   else
     echo "Skip core registry (missing): $core_registry"
   fi
 
+  if [[ -f "$studio_service_schema" ]]; then
+    echo "=== Studio registry schemas ==="
+    provision_run_digit create-registry-schema --file "$studio_service_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+  if [[ -f "$studio_bundle_schema" ]]; then
+    provision_run_digit create-registry-schema --file "$studio_bundle_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+
+  if [[ -f "$gov_ruleset_schema" ]]; then
+    echo "=== Registry schemas (governance) ==="
+    provision_run_digit create-registry-schema --file "$gov_ruleset_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+  if [[ -f "$gov_trace_schema" ]]; then
+    provision_run_digit create-registry-schema --file "$gov_trace_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+  if [[ -f "$gov_receipt_schema" ]]; then
+    provision_run_digit create-registry-schema --file "$gov_receipt_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+  if [[ -f "$gov_order_schema" ]]; then
+    provision_run_digit create-registry-schema --file "$gov_order_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+  if [[ -f "$gov_appeal_schema" ]]; then
+    provision_run_digit create-registry-schema --file "$gov_appeal_schema" --server "$REGISTRY_BASE_URL" --jwt-token "$JWT" || true
+  fi
+
+  local gov_fc_schema gov_fc_data
+  gov_fc_data="$PROVISION_ROOT/examples/governance-facts-contract-mdms-data.yaml"
+  gov_fc_schema="$PROVISION_ROOT/examples/governance-facts-contract-mdms-schema.yaml"
+  if [[ -n "${MDMS_BASE_URL:-}" ]]; then
+    if [[ -f "$gov_fc_schema" ]]; then
+      echo "=== MDMS governance.factsContract schema ==="
+      provision_run_digit create-schema --file "$gov_fc_schema" --server "$MDMS_BASE_URL" --jwt-token "$JWT"
+    fi
+    if [[ -f "$gov_fc_data" ]]; then
+      echo "=== MDMS governance.factsContract data (sample contracts) ==="
+      local gov_fc_data_rendered
+      gov_fc_data_rendered="$(mktemp)"
+      sed "s|__TENANT_ID__|${KEYCLOAK_REALM}|g" "$gov_fc_data" >"$gov_fc_data_rendered"
+      provision_run_digit create-mdms-data --file "$gov_fc_data_rendered" --server "$MDMS_BASE_URL" --jwt-token "$JWT"
+      rm -f "$gov_fc_data_rendered"
+    fi
+  else
+    echo "Skip MDMS facts contracts (MDMS_BASE_URL not set)"
+  fi
+
   echo "=== IdGen template registryId (registry dependency) ==="
   provision_run_digit create-idgen-template --default --template-code registryId --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+
+  echo "=== IdGen templates (studio) ==="
+  provision_run_digit create-idgen-template --template-code studio.svc --template "SVC-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+  provision_run_digit create-idgen-template --template-code studio.bndl --template "BNDL-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+  provision_run_digit create-idgen-template --template-code studio.job --template "JOB-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+
+  echo "=== IdGen templates (governance) ==="
+  provision_run_digit create-idgen-template --template-code governance.rul --template "RUL-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+  provision_run_digit create-idgen-template --template-code governance.dec --template "DEC-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+  provision_run_digit create-idgen-template --template-code governance.rcp --template "RCP-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+  provision_run_digit create-idgen-template --template-code governance.apl --template "APL-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
+  provision_run_digit create-idgen-template --template-code governance.ord --template "ORD-{SEQ}" --scope global --server "$IDGEN_BASE_URL" --jwt-token "$JWT" || true
 
   echo "=== Account / platform setup complete ==="
 }
