@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: registry_db
+      POSTGRES_USER: registry_user
+      POSTGRES_PASSWORD: registry_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U registry_user -d registry_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  registry-service:
+    build: .
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgres://registry_user:registry_password@postgres:5432/registry_db?sslmode=disable
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

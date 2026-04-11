@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS schemas
+    ADD COLUMN IF NOT EXISTS x_indexes JSONB;

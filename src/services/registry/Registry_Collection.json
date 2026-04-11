@@ -1,0 +1,626 @@
+{
+  "info": {
+    "name": "Registry Service",
+    "description": "Updated Postman collection for schema and data APIs using query parameters for schema selection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8085/registry/v1/schema"
+    },
+    {
+      "key": "tenantId",
+      "value": "qa-tenant"
+    },
+    {
+      "key": "clientId",
+      "value": "qa-client"
+    },
+    {
+      "key": "schemaCode",
+      "value": "license-registry"
+    },
+    {
+      "key": "schemaVersion",
+      "value": "1"
+    },
+    {
+      "key": "dataId",
+      "value": "ab242fea-e9c0-4d8c-9b65-655e25486c20"
+    },
+    {
+      "key": "registryId",
+      "value": "REGISTRY-20251124-0006-XR"
+    },
+    {
+      "key": "recordVersion",
+      "value": "2"
+    }
+  ],
+  "item": [
+    {
+      "name": "Schema",
+      "item": [
+        {
+          "name": "Create Schema",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schemaCode\": \"{{schemaCode}}\",\n  \"definition\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"properties\": {\n      \"licenseNumber\": { \"type\": \"string\" },\n      \"holderName\": { \"type\": \"string\" },\n      \"issueDate\": { \"type\": \"string\", \"format\": \"date\" },\n      \"expiryDate\": { \"type\": \"string\", \"format\": \"date\" },\n      \"status\": { \"type\": \"string\", \"enum\": [\"ACTIVE\",\"SUSPENDED\",\"REVOKED\"] }\n    },\n    \"required\": [\"licenseNumber\", \"holderName\", \"issueDate\", \"status\"],\n    \"x-indexes\": [\n      { \"name\": \"idx_license_status\", \"fieldPath\": \"status\", \"method\": \"btree\" },\n      { \"fieldPath\": \"holderName\", \"method\": \"gin\" }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/schema",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Schema (Latest)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schema/{{schemaCode}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema",
+                "{{schemaCode}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Schema By Version",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schema/{{schemaCode}}?version={{schemaVersion}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema",
+                "{{schemaCode}}"
+              ],
+              "query": [
+                {
+                  "key": "version",
+                  "value": "{{schemaVersion}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Schemas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schema",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Schema",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schemaCode\": \"{{schemaCode}}\",\n  \"definition\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"properties\": {\n      \"licenseNumber\": { \"type\": \"string\" },\n      \"holderName\": { \"type\": \"string\" },\n      \"issueDate\": { \"type\": \"string\", \"format\": \"date\" },\n      \"expiryDate\": { \"type\": \"string\", \"format\": \"date\" },\n      \"status\": { \"type\": \"string\", \"enum\": [\"ACTIVE\",\"SUSPENDED\",\"REVOKED\"] },\n      \"lastUpdated\": { \"type\": \"string\", \"format\": \"date-time\" }\n    },\n    \"required\": [\"licenseNumber\", \"holderName\", \"issueDate\", \"status\"],\n    \"x-indexes\": [\n      { \"name\": \"idx_license_status\", \"fieldPath\": \"status\", \"method\": \"btree\" },\n      { \"fieldPath\": \"holderName\", \"method\": \"gin\" },\n      { \"fieldPath\": \"expiryDate\" }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/schema/{{schemaCode}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema",
+                "{{schemaCode}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Schema",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schema/{{schemaCode}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema",
+                "{{schemaCode}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Field Exists (_isExist)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"field\": \"registryId\",\n  \"value\": \"{{registryId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/schema/{{schemaCode}}/_isExist",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "schema",
+                "{{schemaCode}}",
+                "_isExist"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Data",
+      "item": [
+        {
+          "name": "Create Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"licenseNumber\": \"DL-001\",\n    \"holderName\": \"Jane Citizen\",\n    \"issueDate\": \"2024-01-10\",\n    \"expiryDate\": \"2029-01-09\",\n    \"status\": \"ACTIVE\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Data By UUID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data?id={{dataId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{dataId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Data Exists (by registryId)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/_exists?id={{registryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "_exists"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{registryId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Data (filters)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": {\n    \"status\": \"ACTIVE\"\n  },\n  \"limit\": 10,\n  \"offset\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/_search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "_search"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Data (contains)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contains\": {\n    \"holderName\": \"Shilpa Egov\",\n    \"status\": \"ACTIVE\"\n  },\n  \"limit\": 5,\n  \"offset\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/_search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "_search"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search By Registry ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/_registry?registryId={{registryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "_registry"
+              ],
+              "query": [
+                {
+                  "key": "registryId",
+                  "value": "{{registryId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search By Registry ID (history)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/_registry?registryId={{registryId}}&history=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "_registry"
+              ],
+              "query": [
+                {
+                  "key": "registryId",
+                  "value": "{{registryId}}"
+                },
+                {
+                  "key": "history",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Data",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": {{recordVersion}},\n  \"data\": {\n    \"licenseNumber\": \"DL-001\",\n    \"holderName\": \"Jane Citizen Updated\",\n    \"issueDate\": \"2024-01-10\",\n    \"expiryDate\": \"2029-01-09\",\n    \"status\": \"ACTIVE\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data?id={{dataId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{dataId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Data",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/{{dataId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "{{dataId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Data Signature",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "{{clientId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{schemaCode}}/data/_verify?registryId={{registryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{schemaCode}}",
+                "data",
+                "_verify"
+              ],
+              "query": [
+                {
+                  "key": "registryId",
+                  "value": "{{registryId}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Diagnostics",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8085/health",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8085",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
